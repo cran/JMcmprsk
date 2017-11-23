@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<meta name="date" content="2017-11-22" />
+
+<title>Joint Models for Longitudinal Measurements and Competing Risks Failure Time Data</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Joint Models for Longitudinal Measurements and Competing Risks Failure Time Data</h1>
+<h4 class="date"><em>2017-11-22</em></h4>
+
+
+
+<p>Joint analysis of longitudinal outcomes and survival times has gained a lot of attention in recent years. There have been extended to handle competing risks for both continuous and ordinal outcomes <span class="citation">(R. M. Elashoff, Li, and Li 2008, <span class="citation">Li et al. (2010)</span>)</span>. This vignette offers a brief introduction to the R package JMcmprsk, which implements the methods proposed to deal with such joint models, and two competing risks are assumed. The data sets for generating the initial values are provided.</p>
+<div id="joint-modeling-framework" class="section level2">
+<h2>Joint modeling framework</h2>
+<div id="continuous-outcomes" class="section level4">
+<h4>Continuous outcomes</h4>
+<p>Let <span class="math inline">\(Y_i(t)\)</span> be the longitudinal outcome measured at time <span class="math inline">\(t\)</span> for subject <span class="math inline">\(i\)</span>, <span class="math inline">\(i=1,2,\cdots,n\)</span>, and <span class="math inline">\(n\)</span> is the total number of subjects in study. Let <span class="math inline">\(C_i=(T_i,D_i)\)</span> denote the competing risks data on subject <span class="math inline">\(i\)</span>, where <span class="math inline">\(T_i\)</span> is the failure time or censoring time, and <span class="math inline">\(D_i\)</span> takes value in <span class="math inline">\(\{0,1,\cdots,g\}\)</span>, with <span class="math inline">\(D_i=0\)</span> indicating a censored event and <span class="math inline">\(D_i=k\)</span> showing that subject <span class="math inline">\(i\)</span> fails from the <span class="math inline">\(k\)</span>th type of failure, where <span class="math inline">\(k=1,\cdots,g\)</span>.</p>
+The joint model is specified in terms of the following two linked components:
+<span class="math display">\[\begin{eqnarray*}
+Y_i(t)&amp;=&amp;X_i^{(1)}(t)^\top \beta+\tilde X_i^{(1)}(t)^\top b_i+\epsilon_i(t),\\
+\lambda_k(t)&amp;=&amp;\lambda_{0k}(t)\exp(X_i^{(2)}(t)^\top \gamma_k+\nu_k u_i),~~\mbox{for}~~k=1,\cdots,g,
+\end{eqnarray*}\]</span>
+<p>where <span class="math inline">\(X_i^{(1)}(t)\)</span>, <span class="math inline">\(X_i^{(2)}(t)\)</span> denote the covaraites for the fixed-effects <span class="math inline">\(\beta\)</span> and <span class="math inline">\(\gamma_k\)</span>, <span class="math inline">\(\tilde X_i^{(1)}(t)\)</span> denotes the covaraites for the random-effects <span class="math inline">\(b_i\)</span>, and <span class="math inline">\(\epsilon_i(t)\sim N(0,\sigma^2)\)</span> for all <span class="math inline">\(t\geq 0\)</span>. The parameter <span class="math inline">\(\nu_1\)</span> is set to 1 to ensure identifiability. We assume that <span class="math inline">\(b_i\)</span> is independent of <span class="math inline">\(\epsilon_i(t)\)</span> and that <span class="math inline">\(\epsilon_i(t_1)\)</span> is independent of <span class="math inline">\(\epsilon_i(t_2)\)</span> for any <span class="math inline">\(t_1\neq t_2\)</span>. We further assume the random effects <span class="math inline">\(b_i\)</span> and <span class="math inline">\(u_i\)</span> jointly have a multivariate normal distribution, denoted by <span class="math inline">\(\theta_i\sim N(0,\Sigma)\)</span>, where <span class="math inline">\(\Sigma=(\Sigma_{b},\Sigma_{bu}^\top;\Sigma_{bu},\sigma_u)\)</span>.</p>
+Denote <span class="math inline">\(\Psi\)</span> as the unknown parameters from the joint models. We propose to obtain the maximum likelihood estimate of <span class="math inline">\(\Psi\)</span> through an EM algorithm. The complete data likelihood is
+<span class="math display">\[\begin{eqnarray*}
+&amp;&amp;L(\Psi;Y,C,\theta)\\
+&amp;&amp;\propto \Pi_{i=1}^n\Big[\Pi_{j=1}^{n_i}\frac{1}{\sqrt{2\pi\sigma^2}}\exp(-\frac{1}{2\sigma^2}(Y_{ij}-X_i^{(1)}(t_{ij})^\top\beta-\tilde X_i^{(1)}(t_{ij})^\top b_i)^2)\Big]\\
+&amp;&amp;\times \Pi_{k=1}^g\lambda_k(T_i)^{I(D_i=k)}\exp\Big\{-\int_0^{T_i}\sum_{k=1}^g\lambda_k(t)dt\Big\}\\
+&amp;&amp;\times \frac{1}{\sqrt{(2\pi)^d|\Sigma|}}\exp(-\frac{1}{2}\theta_i^\top\Sigma^{-1}\theta_i).
+\end{eqnarray*}\]</span>
+<p>In the E-step, we need to calculate the expected value of all the functions of <span class="math inline">\(\theta\)</span>, The integral does not have a closed-form solution, and thus a numerical method must be employed for its evaluation. Standard option is the Gaussian quadratic rules. In the M-step, we can update <span class="math inline">\(\Psi\)</span> through maximizing the function obtained from the E-step.</p>
+</div>
+<div id="ordinal-outcomes" class="section level4">
+<h4>Ordinal outcomes</h4>
+<p>Let <span class="math inline">\(Y_{ij}\)</span> denote the <span class="math inline">\(j\)</span>th response measured on subject <span class="math inline">\(i\)</span>, where <span class="math inline">\(i=1,\cdots,n\)</span>, <span class="math inline">\(j=1,\cdots,n_i\)</span>, and <span class="math inline">\(Y_{ij}\)</span> takes values in <span class="math inline">\(\{1,\cdots,K\}\)</span>. The competing risks failure times on subject <span class="math inline">\(i\)</span> is <span class="math inline">\((T_i,D_i)\)</span>, and the meaning is the same as in subsection .</p>
+we propose the following partial proportional odds model for <span class="math inline">\(Y_{ij}\)</span>
+<span class="math display">\[\begin{eqnarray*}
+P(Y_{ij}\leq k|X_{ij},\tilde X_{ij},W_{ij},b_i)=\frac{1}{1+\exp(-\theta_{k}-X_{ij}\beta-\tilde X_{ij}\alpha_{k}-W_{ij}^\top b_i)}.
+\end{eqnarray*}\]</span>
+<p>where <span class="math inline">\(k=1,\cdots,K-1\)</span>, <span class="math inline">\(X_{ij}\)</span> and <span class="math inline">\(\tilde X_{ij}\)</span> are <span class="math inline">\(p\times 1\)</span> and <span class="math inline">\(s\times 1\)</span> vectors of covaraites for the fixed-effect <span class="math inline">\(\beta\)</span> and <span class="math inline">\(\alpha_{k}\)</span>, with <span class="math inline">\(\alpha_{1}=0\)</span>, and <span class="math inline">\(\tilde X_{ij}\)</span> is a subset of <span class="math inline">\(X_{ij}\)</span> for which the proportional odds assumption may not be satisfied. The <span class="math inline">\(q\times 1\)</span> vector <span class="math inline">\(b_i\)</span> represents random effects of the associated covaraites <span class="math inline">\(W_{ij}\)</span>.</p>
+The distribution of the competing risks failure times <span class="math inline">\((T_i,D_i)\)</span> are assumed to take the form of the following cause-specific hazards frailty model:
+<span class="math display">\[\begin{eqnarray*}
+\lambda_d(t|Z_i(t),u_i)&amp;=&amp;\lambda_{0d}(t)\exp(Z_i(t)^\top \gamma_d+\nu_d u_i),~~\mbox{for}~~d=1,\cdots,g,
+\end{eqnarray*}\]</span>
+<p>where the <span class="math inline">\(l\times 1\)</span> vector <span class="math inline">\(\gamma_d\)</span> and <span class="math inline">\(\nu_d\)</span> are cause-specific coefficients for the covariates <span class="math inline">\(Z_i(t)\)</span> and the random effects <span class="math inline">\(u_i\)</span>, respectively.</p>
+<p>The parameter <span class="math inline">\(\nu_1\)</span> is set to 1 to ensure identifiability. We assume the random effects <span class="math inline">\(b_i\)</span> and <span class="math inline">\(u_i\)</span> jointly have a multivariate normal distribution, denoted by <span class="math inline">\(a_i\sim N(0,\Sigma)\)</span>.</p>
+Denote <span class="math inline">\(\Psi\)</span> as the unknown parameters from the joint models. We propose to obtain the maximum likelihood estimate of <span class="math inline">\(\Psi\)</span> through an EM algorithm. The complete data likelihood is
+<span class="math display">\[\begin{eqnarray*}
+&amp;&amp;L(\Psi;Y,C,a)\\
+&amp;&amp;\propto \Pi_{i=1}^n\Big[\Pi_{j=1}^{n_i}\Pi_{k=1}^{K}\{\pi_{ij}(k)-\pi_{ij}(k-1)\}^{I(Y_{ij}=k)}\Big]\\
+&amp;&amp;\times \Pi_{d=1}^g\lambda_d(T_i)^{I(D_i=d)}\exp\Big\{-\int_0^{T_i}\sum_{k=1}^d\lambda_d(t)dt\Big\}\\
+&amp;&amp;\times \frac{1}{\sqrt{(2\pi)^{q+1}|\Sigma|}}\exp(-\frac{1}{2}a_i^\top\Sigma^{-1}a_i).
+\end{eqnarray*}\]</span>
+<p>where <span class="math inline">\(\pi_{ij}(k)\)</span> stands for the probability that <span class="math inline">\(Y_{ij}\leq k\)</span> given the covariates and the random effects. The implementation of EM algorithm is the same as that of subection .</p>
+</div>
+</div>
+<div id="the-r-package-jmcmprsk" class="section level2">
+<h2>The R package JMcmprsk</h2>
+The function that fits continuous outcomes in JMcmprsk is called jmc(). As an illustrative example of jmc(), we consider Scleroderma Lung Study <span class="citation">(Tashkin et al. 2006)</span>, a double-blinded, randomized clinical trial to evaluate effectiveness of oral cyclophosphamide (CYC) versus placebo in the treatment of lung disease due to scleroderma. This study includes 158 patients, the primary outcome is forced vital capacity (FVC, as % predicted) determined at 3-month intervals from the baseline. The event of interest is the time-to-treatment failure or death. We consider two factors baseline %FVC (<span class="math inline">\(FVC_0\)</span>) and baseline lung fibrosis (<span class="math inline">\(FIB_0\)</span>) and two risks, informative and noninformative. The model setups are as follows,
+<span class="math display">\[\begin{eqnarray*}
+\%FVC_{ij}&amp;=&amp;\beta_1+\beta_2t_{ij}+\beta_3FVC_{0i}+\beta_4FIB_{0i}+\beta_5CYC_i\\
+&amp;&amp;+\beta_6FVC_{0i}\times CYC_i+\beta_7FIB_{0i}\times CYC_i+\beta_8 t_{ij}\times CYC_i+b_it_{ij}+\epsilon,
+\end{eqnarray*}\]</span>
+and the cause-specific hazards frailty models are
+<span class="math display">\[\begin{eqnarray*}
+\lambda_1(t)=\lambda_{01}(t)\exp(\gamma_{11}FVC_{0i}+\gamma_{12}FIB_{0i}+\gamma_{13}CYC_i+\gamma_{14}FVC_{0i}\times CYC_i+\gamma_{15}FIB_{0i}\times CYC_i+u_i)\\
+\lambda_2(t)=\lambda_{02}(t)\exp(\gamma_{21}FVC_{0i}+\gamma_{22}FIB_{0i}+\gamma_{23}CYC_i+\gamma_{24}FVC_{0i}\times CYC_i+\gamma_{25}FIB_{0i}\times CYC_i+\nu_2u_i),
+\end{eqnarray*}\]</span>
+</div>
+<div id="examples" class="section level2">
+<h2>Examples</h2>
+<p>We first load the package and the data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">123</span>)
+<span class="kw">require</span>(JMcmprsk)
+yfile=<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;fvc621_y.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;JMcmprsk&quot;</span>)
+cfile=<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;fvc621_c.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;JMcmprsk&quot;</span>)
+mfile=<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;fvc621_m.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;JMcmprsk&quot;</span>)</code></pre></div>
+<p>The number of rows in yfile is the total number of measurements for all subjects in the study. The columns in yfile should start with the longitudinal outcome (column 1), the covariates for the random effects, and then the covariates for the fixed effects. For cfile, the survival / censoring time is included in the first column, and the failure type coded as 0 (censored events), 1 (risk 1), or 2 (risk 2) is given in the second column. Two competing risks are assumed. The covariates are included in the third column and on. mfile is to indicate the number of longitudinal measurements per subject. The number of rows equals to the number of subjects.</p>
+<p>Hence, the model can be specified by the function jmc():</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">jmcfit =<span class="st"> </span><span class="kw">jmc</span>(<span class="dt">p=</span><span class="dv">8</span>,yfile,cfile,mfile,<span class="dt">point=</span><span class="dv">20</span>,<span class="dt">do.trace =</span> F)</code></pre></div>
+<p>with <span class="math inline">\(p\)</span> the dimension of fixed effects (include intercept) in yfile, the option “point” is the number of points used to approximate the integral in the E-step, default is 20, and “do.trace” is used to control whether the programm prints the iteration details. If we would like to see a concise summary of the result we can simply type</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#because of the long running time, we save the jmo and jmc results within the package</span>
+fitfile=<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;runfit.RData&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;JMcmprsk&quot;</span>)
+<span class="kw">load</span>(fitfile)
+jmcfit</code></pre></div>
+<pre><code>## Model Type:                             jmc 
+## 
+##                   Estimate   Std. Error       95% CI                Pr(&gt;|Z|)    
+## Longitudinal:                
+##  Fixed effects:                 
+##   intercept       66.0415       0.7541      ( 64.5634, 67.5196)      0
+##   time.1         -0.0616       0.0790      (-0.2165, 0.0932)      0.4353101
+##   FVC0            0.9017       0.0365      ( 0.8302, 0.9732)      6.687478e-135
+##   FIB0           -1.7780       0.5605      (-2.8767,-0.6793)      0.001514602
+##   CYC             0.0150       0.9678      (-1.8819, 1.9119)      0.9876085
+##   FVC0.CYC        0.1380       0.0650      ( 0.0106, 0.2654)      0.03381009
+##   FIB0.CYC        1.7088       0.7643      ( 0.2109, 3.2068)      0.02535631
+##   time.CYC        0.1278       0.1102      (-0.0883, 0.3438)      0.2464477
+##   sigma^2         22.7366       0.6575      ( 21.4478, 24.0253)     5.157487e-262
+## Survival:                
+##  Fixed effects:                 
+##   FVC0_1          0.0187       0.0326      (-0.0452, 0.0826)      0.5660375
+##   FIB0_1          0.1803       0.3521      (-0.5098, 0.8705)      0.6085571
+##   CYC_1          -0.6872       0.7653      (-2.1872, 0.8128)      0.3692041
+##   FVC0.CYC_1     -0.0517       0.0746      (-0.1979, 0.0945)      0.488001
+##   FIB0.CYC_1     -0.4665       1.1099      (-2.6419, 1.7089)      0.674281
+##   FVC0_2         -0.0677       0.0271      (-0.1208,-0.0147)      0.01233242
+##   FIB0_2          0.1965       0.3290      (-0.4484, 0.8414)      0.5503444
+##   CYC_2           0.3137       0.4665      (-0.6007, 1.2280)      0.5013296
+##   FVC0.CYC_2      0.1051       0.0410      ( 0.0248, 0.1854)      0.01034231
+##   FIB0.CYC_2      0.1239       0.4120      (-0.6836, 0.9314)      0.7635869
+## Random effects:                 
+##   v2              1.9949       2.3093      (-2.5314, 6.5212)      0.3876868
+##   sigma_b11       0.2215       0.0294      ( 0.1638, 0.2792)     5.337397e-14
+##   sigma_u         0.0501       0.0898      (-0.1259, 0.2260)      0.5771715
+## Covariance:                 
+##   sigma_b1u      -0.0997       0.0797      (-0.2560, 0.0565)      0.2109131</code></pre>
+The resulting table contains three parts, the fixed effects in longitudinal model, survival model and random effects. It gives the estimated parameters in the first column, standard error in the second column, 95% confidence interval and <span class="math inline">\(p\)</span>-value for these parameters in the third and forth columns. In our example, there is only one random effect, if there are more than one random effect, the outputs will include
+
+<p>and so on.</p>
+<p>By the way, the supporting function coef() can be used to extract the coefficients of the longitudinal process:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">coef</span>(jmcfit)</code></pre></div>
+<pre><code>##   intercept      time.1        FVC0        FIB0         CYC    FVC0.CYC 
+## 66.04146267 -0.06164756  0.90166283 -1.77799172  0.01503104  0.13798885 
+##    FIB0.CYC    time.CYC 
+##  1.70883750  0.12776670</code></pre>
+<p>We proceed by checking the fit of the model using Wald test.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">anova</span>(jmcfit,<span class="dt">coeff=</span><span class="st">&quot;beta&quot;</span>)</code></pre></div>
+<pre><code>##         Chisq df    Pr(&gt;|Chi|)
+## beta 1067.165  7 3.684936e-226</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">anova</span>(jmcfit,<span class="dt">coeff=</span><span class="st">&quot;gamma&quot;</span>)</code></pre></div>
+<pre><code>##           Chisq df Pr(&gt;|Chi|)
+## gamma1 1.519491  5  0.9108096
+## gamma2 9.162137  5  0.1027692</code></pre>
+<p>We can see that the hypothesis that <span class="math inline">\(\beta_2=\beta_3=\cdots=\beta_8=0\)</span> will be rejected, and the hypothesis <span class="math inline">\(\gamma_{11}=\gamma_{12}=\cdots= \gamma_{15}=0\)</span> and <span class="math inline">\(\gamma_{21}=\gamma_{22}=\cdots=\gamma_{25}=0\)</span> will not be rejected at the nominal level of 0.05.</p>
+The implement of jmo() is the same as that of jmc(). As an illustrative example, we use the data from NINDS rt-PA stroke trial <span class="citation">(Group 1995)</span>. In this study, 624 patients are included, and the patients treated with rt-PA were compared with those given placebo to look for an improvement from baseline in the score on the modified Rankin scale, an ordinal measure of degree of disability with categories ranging from no symptoms, no significant disability to severe disability or death, which means in this example, <span class="math inline">\(Y_{ij}\)</span> takes <span class="math inline">\(K=4\)</span> ordinal values. The following covaraites are considered: treatment group (rt-PA or placebo), modified Rankin scale prior stroke onset, time since randomization (dummy variables for 3, 6 and 12 months), and the three subtypes of acute stroke (small vessel occlusive disease, large vessel atherosclerosis or cardioembolic stroke, and unknown reasons). Similarly, we also consider the informative and noninformative risks. The model setups are as follows,
+<span class="math display">\[\begin{eqnarray*}
+P(Y_{ij}\leq k)&amp;=&amp;[1+\exp(-\theta_{k}-(\beta_1Group+\beta_2\mbox{Modified Rankin scale prior onset}+\beta_3time3\\
+&amp;&amp;+\beta_4time6+\beta_5time12+\beta_6\mbox{Small vessel}+\beta_7\mbox{Large vessel or cardioembolic stroke}\\
+&amp;&amp;+\beta_8 \mbox{Small vessel*group}+\beta_9\mbox{Large vessel or cardioembolic stroke*group})\\
+&amp;&amp;-(\alpha_{k1}\mbox{Small vessel}+\alpha_{k2}\mbox{Large vessel or cardioembolic stroke})-b_i)]^{-1}.
+\end{eqnarray*}\]</span>
+where <span class="math inline">\(k=1,\cdots,K-1\)</span>.
+<span class="math display">\[\begin{eqnarray*}
+\lambda_1(t)&amp;=&amp;\lambda_{01}(t)\exp(\gamma_{11}Group+\gamma_{12}\mbox{Modified Rankin scale prior onset}\\
+&amp;&amp;+\gamma_{13}\mbox{Small vessel}+\gamma_{14}\mbox{Large vessel or cardioembolic stroke}\\
+&amp;&amp;+\gamma_{15} \mbox{Small vessel*group}+\gamma_{16}\mbox{Large vessel or cardioembolic stroke*group}+u_i)\\
+\lambda_2(t)&amp;=&amp;\lambda_{02}(t)\exp(\gamma_{21}Group+\gamma_{22}\mbox{Modified Rankin scale prior onset}\\
+&amp;&amp;+\gamma_{23}\mbox{Small vessel}+\gamma_{24}\mbox{Large vessel or cardioembolic stroke}\\
+&amp;&amp;+\gamma_{25} \mbox{Small vessel*group}+\gamma_{26}\mbox{Large vessel or cardioembolic stroke*group}+\nu_2u_i),
+\end{eqnarray*}\]</span>
+<p>We first load the package and the data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">123</span>)
+<span class="kw">require</span>(JMcmprsk)
+yfile=<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;ninds_nrank_y.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;JMcmprsk&quot;</span>)
+cfile=<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;ninds_nrank_c.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;JMcmprsk&quot;</span>)
+mfile=<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;ninds_nrank_m.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;JMcmprsk&quot;</span>)</code></pre></div>
+<p>In particular, we put the non-proportional odds covariates in front of the proportional odds covariates in yfile, and the other arrangements are the same with those in jmc().</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">jmofit =<span class="st"> </span><span class="kw">jmo</span>(<span class="dt">p=</span><span class="dv">9</span>,<span class="dt">s=</span><span class="dv">2</span>, yfile,cfile,mfile,<span class="dt">point=</span><span class="dv">20</span>,<span class="dt">do.trace =</span> F)</code></pre></div>
+<p>with <span class="math inline">\(p\)</span> the dimension of proportional odds covariates (not including intercept) in yfile and <span class="math inline">\(s\)</span> the dimension of non-proportional odds covariates in yfile. If we would like to see a concise summary of the result we can simply type</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#because of the long running time, we save the jmo and jmc results within the package</span>
+fitfile=<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;runfit.RData&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;JMcmprsk&quot;</span>)
+<span class="kw">load</span>(fitfile)
+jmofit</code></pre></div>
+<pre><code>## Model Type:                             jmo 
+## 
+##                   Estimate   Std. Error       95% CI                Pr(&gt;|Z|)    
+## Longitudinal:                
+##  Fixed effects:                 
+##   group           1.5153       0.3326      ( 0.8634, 2.1673)      5.224967e-06
+##   mrkprior       -1.6831       0.2739      (-2.2199,-1.1463)      7.978244e-10
+##   time3           2.1384       0.1999      ( 1.7467, 2.5302)      1.035586e-26
+##   time6           2.2898       0.1987      ( 1.9003, 2.6792)      1.002984e-30
+##   time12          2.4872       0.2147      ( 2.0664, 2.9079)      4.797476e-31
+##   smlves.1        3.5444       0.6748      ( 2.2219, 4.8670)      1.497489e-07
+##   lvORcs.1       -1.0382       0.4381      (-1.8968,-0.1796)      0.01778312
+##   smlves.group   -0.7316       1.2482      (-3.1781, 1.7149)      0.5578096
+##   lvORcs.group   -2.2769       0.7533      (-3.7534,-0.8005)      0.002504966
+##   smlves_2        0.2730       0.4084      (-0.5274, 1.0734)      0.5038251
+##   lvORcs_2       -0.3192       0.2400      (-0.7897, 0.1513)      0.1836338
+##   smlves_3        2.7083       1.2015      ( 0.3533, 5.0634)      0.02419251
+##   lvORcs_3        0.3969       0.4957      (-0.5745, 1.3684)      0.4232214
+##   theta1         -4.6730       0.2225      (-5.1090,-4.2369)      5.848706e-98
+##   theta2         -2.8442       0.1940      (-3.2245,-2.4639)      1.191674e-48
+##   theta3          3.5552       0.2496      ( 3.0661, 4.0443)      4.723012e-46
+## Survival:                
+##  Fixed effects:                 
+##   group_1        -0.4699       0.2607      (-0.9808, 0.0410)      0.07143253
+##   mrkprior_1      0.5318       0.1616      ( 0.2150, 0.8486)      0.001002607
+##   smlves_1       -2.1029       0.7403      (-3.5539,-0.6518)      0.004506389
+##   lvORcs_1        0.3755       0.2660      (-0.1458, 0.8968)      0.158049
+##   smlves.group_1  0.3318       1.4797      (-2.5684, 3.2319)      0.8225872
+##   lvORcs.group_1  0.8076       0.5403      (-0.2515, 1.8666)      0.1350328
+##   group_2         0.2078       0.4812      (-0.7354, 1.1511)      0.6658155
+##   mrkprior_2      0.0611       0.4241      (-0.7701, 0.8923)      0.8854034
+##   smlves_2        0.7815       0.5963      (-0.3873, 1.9502)      0.1900336
+##   lvORcs_2       -0.3259       0.5080      (-1.3215, 0.6698)      0.5211938
+##   smlves.group_2 -0.0397       1.1382      (-2.2706, 2.1912)      0.9721772
+##   lvORcs.group_2  0.0983       1.0654      (-1.9899, 2.1865)      0.9264852
+## Random effects:                 
+##   v2              0.0115        0.1826     (-0.3464, 0.3695)      0.9496347
+##   sigma_b11       35.4448        3.9952     ( 27.6143, 43.2753)      7.188018e-19
+##   sigma_u         5.0375        1.2773     ( 2.5339, 7.5411)      8.02044e-05
+## Covariance:                 
+##   sigma_b1u      -13.3527        0.6497     (-14.6260,-12.0793)      7.180908e-94</code></pre>
+<p>The usage of functions coef() and anova() are the same with those in jmc(). For example, anova(jmofit,coeff=“beta”) presents the result of hypothesis <span class="math inline">\(\beta_1=\beta_2=\cdots=\beta_9=0\)</span> at the nominal level of 0.05.</p>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1>References</h1>
+<div id="refs" class="references">
+<div id="ref-MR2526626">
+<p>Elashoff, Robert M., Gang Li, and Ning Li. 2008. “A Joint Model for Longitudinal Measurements and Survival Data in the Presence of Multiple Failure Types.” <em>Biometrics</em> 64 (3): 762–71. <a href="https://doi.org/10.1111/j.1541-0420.2007.00952.x" class="uri">https://doi.org/10.1111/j.1541-0420.2007.00952.x</a>.</p>
+</div>
+<div id="ref-stroke1995tissue">
+<p>Group, Stroke Study. 1995. “Tissue Plasminogen Activator for Acute Ischemic Stroke.” <em>N Eng J Med.</em> 333: 1581–7.</p>
+</div>
+<div id="ref-MR2758452">
+<p>Li, Ning, Robert M. Elashoff, Gang Li, and Jeffrey Saver. 2010. “Joint Modeling of Longitudinal Ordinal Data and Competing Risks Survival Times and Analysis of the NINDS Rt-PA Stroke Trial.” <em>Stat. Med.</em> 29 (5): 546–57. <a href="https://doi.org/10.1002/sim.3798" class="uri">https://doi.org/10.1002/sim.3798</a>.</p>
+</div>
+<div id="ref-tashkin2006cyclophosphamide">
+<p>Tashkin, Donald P, Robert Elashoff, Philip J Clements, Jonathan Goldin, Michael D Roth, Daniel E Furst, Edgar Arriola, et al. 2006. “Cyclophosphamide Versus Placebo in Scleroderma Lung Disease.” <em>New England Journal of Medicine</em> 354 (25). Mass Medical Soc: 2655–66.</p>
+</div>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
