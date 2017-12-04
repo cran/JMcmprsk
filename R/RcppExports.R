@@ -9,11 +9,3 @@ jmo_main <- function(k, n1, p1, p2, p1a, bq, K_num, j_max, point, betas, thetas,
     .Call(`_JMcmprsk_jmo_main`, k, n1, p1, p2, p1a, bq, K_num, j_max, point, betas, thetas, maxiterations, yfile, cfile, mfile, trace)
 }
 
-SimDataC <- function(k_val, p1_val, p2_val, g_val, yfn, cfn, mfn) {
-    invisible(.Call(`_JMcmprsk_SimDataC`, k_val, p1_val, p2_val, g_val, yfn, cfn, mfn))
-}
-
-SimDataO <- function(k_val, p1_val, p2_val, g_val, yfn, cfn, mfn) {
-    invisible(.Call(`_JMcmprsk_SimDataO`, k_val, p1_val, p2_val, g_val, yfn, cfn, mfn))
-}
-

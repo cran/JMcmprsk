@@ -53,44 +53,10 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// SimDataC
-void SimDataC(SEXP k_val, SEXP p1_val, SEXP p2_val, SEXP g_val, SEXP yfn, SEXP cfn, SEXP mfn);
-RcppExport SEXP _JMcmprsk_SimDataC(SEXP k_valSEXP, SEXP p1_valSEXP, SEXP p2_valSEXP, SEXP g_valSEXP, SEXP yfnSEXP, SEXP cfnSEXP, SEXP mfnSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type k_val(k_valSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type p1_val(p1_valSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type p2_val(p2_valSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type g_val(g_valSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type yfn(yfnSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type cfn(cfnSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type mfn(mfnSEXP);
-    SimDataC(k_val, p1_val, p2_val, g_val, yfn, cfn, mfn);
-    return R_NilValue;
-END_RCPP
-}
-// SimDataO
-void SimDataO(SEXP k_val, SEXP p1_val, SEXP p2_val, SEXP g_val, SEXP yfn, SEXP cfn, SEXP mfn);
-RcppExport SEXP _JMcmprsk_SimDataO(SEXP k_valSEXP, SEXP p1_valSEXP, SEXP p2_valSEXP, SEXP g_valSEXP, SEXP yfnSEXP, SEXP cfnSEXP, SEXP mfnSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type k_val(k_valSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type p1_val(p1_valSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type p2_val(p2_valSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type g_val(g_valSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type yfn(yfnSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type cfn(cfnSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type mfn(mfnSEXP);
-    SimDataO(k_val, p1_val, p2_val, g_val, yfn, cfn, mfn);
-    return R_NilValue;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_JMcmprsk_jmc_main", (DL_FUNC) &_JMcmprsk_jmc_main, 12},
     {"_JMcmprsk_jmo_main", (DL_FUNC) &_JMcmprsk_jmo_main, 16},
-    {"_JMcmprsk_SimDataC", (DL_FUNC) &_JMcmprsk_SimDataC, 7},
-    {"_JMcmprsk_SimDataO", (DL_FUNC) &_JMcmprsk_SimDataO, 7},
     {NULL, NULL, 0}
 };
 

@@ -34,7 +34,7 @@ In the E-step, we need to calculate the expected value of all the functions of $
 The integral does not have a closed-form solution, and thus a numerical method must be employed for its evaluation. Standard option is the Gaussian quadratic rules. In the M-step, we can update $\Psi$ through maximizing the function obtained from the E-step.
 
 #### Ordinal outcomes
-Let $Y_{ij}$ denote the $j$th response measured on subject $i$, where $i=1,\cdots,n$, $j=1,\cdots,n_i$, and $Y_{ij}$ takes values in $\{1,\cdots,K\}$. The competing risks failure times on subject $i$ is $(T_i,D_i)$, and the meaning is the same as in subsection \ref{jmc}.
+Let $Y_{ij}$ denote the $j$th response measured on subject $i$, where $i=1,\cdots,n$, $j=1,\cdots,n_i$, and $Y_{ij}$ takes values in $\{1,\cdots,K\}$. The competing risks failure times on subject $i$ is $(T_i,D_i)$, and the meaning is the same as in subsection of "Continuous outcomes".
 
 we propose the following partial proportional odds model for $Y_{ij}$
 \begin{eqnarray*}
@@ -57,7 +57,7 @@ Denote $\Psi$ as the unknown parameters from the joint models. We propose to obt
 &&\times \Pi_{d=1}^g\lambda_d(T_i)^{I(D_i=d)}\exp\Big\{-\int_0^{T_i}\sum_{k=1}^d\lambda_d(t)dt\Big\}\\
 &&\times \frac{1}{\sqrt{(2\pi)^{q+1}|\Sigma|}}\exp(-\frac{1}{2}a_i^\top\Sigma^{-1}a_i).
 \end{eqnarray*}
-where $\pi_{ij}(k)$ stands for the probability that $Y_{ij}\leq k$ given the covariates and the random effects. The implementation of EM algorithm is the same as that of subection \ref{jmc}.
+where $\pi_{ij}(k)$ stands for the probability that $Y_{ij}\leq k$ given the covariates and the random effects. The implementation of EM algorithm is the same as that of subection of "Continuous outcomes".
 
 ## The R package JMcmprsk
 
@@ -101,8 +101,7 @@ load(fitfile)
 jmcfit
 ```
 The resulting table contains three parts, the fixed effects in longitudinal model, survival model and random effects. It gives the estimated parameters in the first column, standard error in the second column, 95\% confidence interval and $p$-value for these parameters in the third and forth columns. In our example, there is only one random effect, if there are more than one random effect, the outputs will include
-\begin{verbatim}sigma_b11, sigma_b12, sigma_b22, sigma_b1u, sigma_b2u 
-\end{verbatim}
+$sigma_b11, sigma_b12, sigma_b22, sigma_b1u, sigma_b2u$
 and so on.
 
 By the way, the supporting function coef() can be used to extract the coefficients of the longitudinal process:

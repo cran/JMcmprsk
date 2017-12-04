@@ -11,7 +11,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-<meta name="date" content="2017-11-22" />
+<meta name="date" content="2017-12-04" />
 
 <title>Joint Models for Longitudinal Measurements and Competing Risks Failure Time Data</title>
 
@@ -68,7 +68,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 <h1 class="title toc-ignore">Joint Models for Longitudinal Measurements and Competing Risks Failure Time Data</h1>
-<h4 class="date"><em>2017-11-22</em></h4>
+<h4 class="date"><em>2017-12-04</em></h4>
 
 
 
@@ -95,7 +95,7 @@ Denote <span class="math inline">\(\Psi\)</span> as the unknown parameters from 
 </div>
 <div id="ordinal-outcomes" class="section level4">
 <h4>Ordinal outcomes</h4>
-<p>Let <span class="math inline">\(Y_{ij}\)</span> denote the <span class="math inline">\(j\)</span>th response measured on subject <span class="math inline">\(i\)</span>, where <span class="math inline">\(i=1,\cdots,n\)</span>, <span class="math inline">\(j=1,\cdots,n_i\)</span>, and <span class="math inline">\(Y_{ij}\)</span> takes values in <span class="math inline">\(\{1,\cdots,K\}\)</span>. The competing risks failure times on subject <span class="math inline">\(i\)</span> is <span class="math inline">\((T_i,D_i)\)</span>, and the meaning is the same as in subsection .</p>
+<p>Let <span class="math inline">\(Y_{ij}\)</span> denote the <span class="math inline">\(j\)</span>th response measured on subject <span class="math inline">\(i\)</span>, where <span class="math inline">\(i=1,\cdots,n\)</span>, <span class="math inline">\(j=1,\cdots,n_i\)</span>, and <span class="math inline">\(Y_{ij}\)</span> takes values in <span class="math inline">\(\{1,\cdots,K\}\)</span>. The competing risks failure times on subject <span class="math inline">\(i\)</span> is <span class="math inline">\((T_i,D_i)\)</span>, and the meaning is the same as in subsection of “Continuous outcomes”.</p>
 we propose the following partial proportional odds model for <span class="math inline">\(Y_{ij}\)</span>
 <span class="math display">\[\begin{eqnarray*}
 P(Y_{ij}\leq k|X_{ij},\tilde X_{ij},W_{ij},b_i)=\frac{1}{1+\exp(-\theta_{k}-X_{ij}\beta-\tilde X_{ij}\alpha_{k}-W_{ij}^\top b_i)}.
@@ -114,7 +114,7 @@ Denote <span class="math inline">\(\Psi\)</span> as the unknown parameters from 
 &amp;&amp;\times \Pi_{d=1}^g\lambda_d(T_i)^{I(D_i=d)}\exp\Big\{-\int_0^{T_i}\sum_{k=1}^d\lambda_d(t)dt\Big\}\\
 &amp;&amp;\times \frac{1}{\sqrt{(2\pi)^{q+1}|\Sigma|}}\exp(-\frac{1}{2}a_i^\top\Sigma^{-1}a_i).
 \end{eqnarray*}\]</span>
-<p>where <span class="math inline">\(\pi_{ij}(k)\)</span> stands for the probability that <span class="math inline">\(Y_{ij}\leq k\)</span> given the covariates and the random effects. The implementation of EM algorithm is the same as that of subection .</p>
+<p>where <span class="math inline">\(\pi_{ij}(k)\)</span> stands for the probability that <span class="math inline">\(Y_{ij}\leq k\)</span> given the covariates and the random effects. The implementation of EM algorithm is the same as that of subection of “Continuous outcomes”.</p>
 </div>
 </div>
 <div id="the-r-package-jmcmprsk" class="section level2">
@@ -178,9 +178,7 @@ jmcfit</code></pre></div>
 ##   sigma_u         0.0501       0.0898      (-0.1259, 0.2260)      0.5771715
 ## Covariance:                 
 ##   sigma_b1u      -0.0997       0.0797      (-0.2560, 0.0565)      0.2109131</code></pre>
-The resulting table contains three parts, the fixed effects in longitudinal model, survival model and random effects. It gives the estimated parameters in the first column, standard error in the second column, 95% confidence interval and <span class="math inline">\(p\)</span>-value for these parameters in the third and forth columns. In our example, there is only one random effect, if there are more than one random effect, the outputs will include
-
-<p>and so on.</p>
+<p>The resulting table contains three parts, the fixed effects in longitudinal model, survival model and random effects. It gives the estimated parameters in the first column, standard error in the second column, 95% confidence interval and <span class="math inline">\(p\)</span>-value for these parameters in the third and forth columns. In our example, there is only one random effect, if there are more than one random effect, the outputs will include <span class="math inline">\(sigma_b11, sigma_b12, sigma_b22, sigma_b1u, sigma_b2u\)</span> and so on.</p>
 <p>By the way, the supporting function coef() can be used to extract the coefficients of the longitudinal process:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">coef</span>(jmcfit)</code></pre></div>
 <pre><code>##   intercept      time.1        FVC0        FIB0         CYC    FVC0.CYC 
