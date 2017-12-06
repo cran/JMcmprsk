@@ -452,7 +452,7 @@ namespace jmcspace {
     gsl_matrix_set_zero(V);
     for(i=0;i<p1a+1;i++)  gsl_matrix_set(V,i,i,sqrt(gsl_vector_get(S,i)));
     MulMM(VC,V,VV);
-    gsl_matrix_scale(VV,sqrt(2));
+    gsl_matrix_scale(VV,(double)sqrt(2));
     gsl_vector *ri=gsl_vector_alloc(p1a+1);
     gsl_vector *ti=gsl_vector_alloc(p1a+1);
     m=0;    
@@ -481,7 +481,7 @@ namespace jmcspace {
                     gsl_vector_set(ri,0,gsl_vector_get(xi,db0));
                     gsl_vector_set(ri,1,gsl_vector_get(xi,du));
                     MulM(VV,ri,ti);
-                    temp=exp(10);
+                    temp=(double)exp(10);
                     for(i=0;i<q;i++)
                     {
                         for(t=0;t<p1;t++)  gsl_vector_set(Z,t,gsl_matrix_get(Y,m+i,t+p1a+1));
@@ -544,7 +544,7 @@ namespace jmcspace {
                     gsl_vector_set(ri,1,gsl_vector_get(xi,db1));
                     gsl_vector_set(ri,2,gsl_vector_get(xi,du));
                     MulM(VV,ri,ti);
-                    temp=exp(10);
+                    temp=(double)exp(10);
                     for(i=0;i<q;i++)
                     {
                         for(t=0;t<p1;t++)  gsl_vector_set(Z,t,gsl_matrix_get(Y,m+i,t+p1a+1));
@@ -613,7 +613,7 @@ namespace jmcspace {
                     gsl_vector_set(ri,2,gsl_vector_get(xi,db2));
                     gsl_vector_set(ri,3,gsl_vector_get(xi,du));
                     MulM(VV,ri,ti);
-                    temp=exp(10);
+                    temp=(double)exp(10);
                     for(i=0;i<q;i++)
                     {
                         for(t=0;t<p1;t++)  gsl_vector_set(Z,t,gsl_matrix_get(Y,m+i,t+p1a+1));
@@ -765,7 +765,7 @@ namespace jmcspace {
     gsl_matrix_set_zero(V);
     for(i=0;i<p1a+1;i++)  gsl_matrix_set(V,i,i,sqrt(gsl_vector_get(S,i)));
     MulMM(VC,V,VV);
-    gsl_matrix_scale(VV,sqrt(2));
+    gsl_matrix_scale(VV,(double)sqrt(2));
     gsl_vector *ri=gsl_vector_alloc(p1a+1);
     gsl_vector *ti=gsl_vector_alloc(p1a+1);
     double loglik=0;

@@ -1,4 +1,4 @@
-a4560306a6732716d1ed3e4cb7b0d4e8 *DESCRIPTION
+c35b1b4d22308afa849bc3902e6a220e *DESCRIPTION
 f131ba1940ae0be84440eacd5b93ae6d *INSTALL
 3aa3778b2b4357eb350df2b440007038 *NAMESPACE
 afd03cabcacd2f1cca9315078f106e9c *R/JMcmprsk.R
@@ -15,7 +15,7 @@ fd2974ba97edac81cbcd7ab26ee1ac88 *build/vignette.rds
 f369d8daebf08a627b2cc0d798f5e5ef *configure.ac
 73163dea89ff8c87f399ab50fc054565 *inst/doc/JMcmprsk.R
 6ec821e56e573691b356a992a9cdfff0 *inst/doc/JMcmprsk.Rmd
-14f26b2fc86744aba93fed2ea783c4ce *inst/doc/JMcmprsk.html
+4b068fe02d2c7864c96fc7b4a89fecb9 *inst/doc/JMcmprsk.html
 f0ed0080a2ff7091ac72277133e690d6 *inst/extdata/fvc621_c.txt
 05d3671f5ba0631479dc7af787ee5bac *inst/extdata/fvc621_m.txt
 a01ba2a75364fe1b070830c44f2aa7ac *inst/extdata/fvc621_y.txt
@@ -38,9 +38,9 @@ cff9909887185f7e896a554aad1ca394 *man/print.JMcmprsk.Rd
 0597df020820359c91d3773496034349 *src/Makevars.in
 0dec0cdb08e6854e244cc91b049b6c68 *src/Makevars.win
 805ebbb6510905daa2abcbdf45336107 *src/RcppExports.cpp
-659411918aa540ff58c6bfbafe339dfc *src/jmc.cpp
+0a4c179dc4ce7e4cbd705f056c8e0d32 *src/jmc.cpp
 0027a8b1d864d33f5b9882638e8e5713 *src/jmc.h
-6807e6effc18755b8c73fc583a3a825e *src/jmo.cpp
+1f2670f97703a1c36fd35cffa5a8e147 *src/jmo.cpp
 1d53a179c43bcbf86d87e0498a262126 *src/jmo.h
 6ec821e56e573691b356a992a9cdfff0 *vignettes/JMcmprsk.Rmd
 5143c8f65663e036083d36ac5922a857 *vignettes/JMcmprsk.bib
