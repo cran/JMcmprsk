@@ -1135,7 +1135,7 @@ namespace jmospace {
     MulMM(VC,V,VV);
 
 
-    gsl_matrix_scale(VV,(double)sqrt(2));
+    gsl_matrix_scale(VV,sqrt((double)2));
 
 
     gsl_vector *ri=gsl_vector_alloc(p1a+1);
@@ -1183,7 +1183,7 @@ namespace jmospace {
 
                     MulM(VV,ri,ti);
 
-                    temp=(double)exp(10);
+                    temp=exp((double)10);
 
                     for(i=0;i<q;i++)
                     {
@@ -1376,7 +1376,7 @@ namespace jmospace {
                     MulM(VV,ri,ti);
 
 
-                    temp=(double)exp(10);
+                    temp=exp((double)10);
 
                     for(i=0;i<q;i++)
                     {
@@ -1548,7 +1548,7 @@ namespace jmospace {
                     MulM(VV,ri,ti);
 
 
-                    temp=(double)exp(10);
+                    temp=exp((double)10);
 
                     for(i=0;i<q;i++)
                     {
@@ -1848,7 +1848,7 @@ namespace jmospace {
     MulMM(VC,V,VV);
 
 
-    gsl_matrix_scale(VV,(double)sqrt(2));
+    gsl_matrix_scale(VV,sqrt((double)2));
 
 
     gsl_vector *ri=gsl_vector_alloc(p1a+1);
