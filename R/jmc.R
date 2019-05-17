@@ -7,6 +7,7 @@
 ##' @param point Quadrature points used in the EM procedure.Default is 20.
 ##' @param maxiterations Maximum values of iterations. Default is 100000.
 ##' @param do.trace Print detailed information of each iteration. Default is false, i.e., not to print the iteration details.
+##' @param type_file Types of inputs. Default is true, i.e.  data files with headers. If set to "F", inputs are changed to data matrixes or data.frames (with headers)
 ##' @param ... further arguments passed to or from other methods.
 ##' @return Object of class \code{JMcmprsk} with elements
 ##'   \tabular{ll}{
@@ -43,6 +44,11 @@
 ##' cfile=system.file("extdata", "fvc621_c.txt", package = "JMcmprsk")
 ##' mfile=system.file("extdata", "fvc621_m.txt", package = "JMcmprsk")
 ##' res1=jmc(p=8,yfile,cfile,mfile,do.trace = TRUE)
+##' #if the input are not files but matrixes or data.frames,i.e. type_file=F
+##'  ydata=read.table(yfile,header = T)
+##'  cdata=read.table(cfile,header = T)
+##'  mdata=read.table(mfile)
+##'  res1=jmc(p=8,ydata,cdata,mdata, do.trace = TRUE,type_file = F)
 ##' coef(res1) 
 ##' anova(res1,coeff="beta") 
 ##' anova(res1,coeff="gamma")   
@@ -53,9 +59,25 @@
 ##' }
 ##' @seealso \code{\link{jmo}}
 ##' @export
-jmc <- function (p,yfile,cfile,mfile,point=20,maxiterations=100000,do.trace=FALSE)
+jmc<- function (p,yfile,cfile,mfile,point=20,maxiterations=100000,do.trace=FALSE,type_file=TRUE)
 {
- 
+  if (do.trace) { 
+    trace=1;
+  }else{
+    trace=0;
+  }
+  
+  
+  #Gaussian-Hermite quadrature nodes and weights
+  #The dimension of xs/ws is half of the point value since they are symmetric
+  
+  gq_vals <- statmod::gauss.quad(n = point, kind = "hermite")
+  
+  xs <- gq_vals$nodes[(point / 2 + 1) : point]
+  
+  ws <- gq_vals$weights[(point / 2 + 1) : point]
+  
+  if (type_file){
   # store header names for future useage
   ydata=read.table(yfile,header = T)
   ynames=colnames(ydata)
@@ -87,16 +109,49 @@ jmc <- function (p,yfile,cfile,mfile,point=20,maxiterations=100000,do.trace=FALS
   p2=cdim[2]-2;
 
   maxl=max(read.table(mfile));
+  myresult=jmc_main(k,n1, p,p2, maxl,p1a, maxiterations, point,xs,ws, yfile,cfile,mfile,trace)
+  
+  }else{
+    ynames=colnames(yfile)
+    yfilenew=tempfile(pattern = "", fileext = ".txt")
+    writenh(yfile,yfilenew)
+    
+    cnames=colnames(cfile)
+    cfilenew=tempfile(pattern = "", fileext = ".txt")
+    writenh(cfile,cfilenew)
+    
+    mfilenew=tempfile(pattern = "", fileext = ".txt")
+    writenh(mfile,mfilenew)
+    
+    ydim=dim(yfile)
+    # number of observations in study is equals to the #of rows in Y matrix
+    n1=ydim[1];
+    # dim of fixed effects plus dim of random effects should be 
+    # total the column of y -the survival time column 1
+    p1a=ydim[2]-1-p;
+    
+    if((p<1)|(p1a<1)){
+      stop("Possibe wrong dimension of fixed effects in Y!")
+    }
+    
+    cdim=dim(cfile);
+    
+    # number of subjects in study is equals to the #of rows in C matrix
+    k=cdim[1];
+    #
+    p2=cdim[2]-2;
+    
+    maxl=max(mfile);
+  
+    
+  myresult=jmc_main(k,n1, p,p2, maxl,p1a, maxiterations, point,xs,ws, yfilenew,cfilenew,mfilenew,trace)  
+  }
+  
+  
 
- if (do.trace) { 
-   trace=1;
- }else{
-   trace=0;
- }
  
-  # for future checking: point could be 10 or 20 depending on data
 
-  myresult=jmc_main(k,n1, p,p2, maxl,p1a, maxiterations, point, yfile,cfile,mfile,trace)
+
   myresult$type="jmc";
 
   #names

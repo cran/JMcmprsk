@@ -5,7 +5,7 @@
 \title{Joint Modelling for Ordinal outcomes}
 \usage{
 jmo(p, s, yfile, cfile, mfile, point = 20, maxiterations = 1e+05,
-  do.trace = FALSE)
+  do.trace = FALSE, type_file = TRUE)
 }
 \arguments{
 \item{p}{The dimension of proportional odds covariates (not including intercept) in yfile.}
@@ -23,6 +23,8 @@ jmo(p, s, yfile, cfile, mfile, point = 20, maxiterations = 1e+05,
 \item{maxiterations}{Maximum values of iterations. Default is 100000.}
 
 \item{do.trace}{Print detailed information of each iteration. Default is false, not to print the iteration details.}
+
+\item{type_file}{Types of inputs. Default is true, i.e.  data files with headers. If set to "F", inputs are changed to data matrixes or data.frames (with headers)}
 
 \item{...}{further arguments passed to or from other methods.}
 }
@@ -55,7 +57,7 @@ Joint modeling of longitudinal ordinal data and competing risks
  yfile=system.file("extdata", "jmosimy.txt", package = "JMcmprsk")
  cfile=system.file("extdata", "jmosimc.txt", package = "JMcmprsk")
  mfile=system.file("extdata", "jmosimm.txt", package = "JMcmprsk")
- res3=jmo(p=3,s=1, yfile,cfile,mfile,point=10)
+ res3=jmo(p=3,s=1, yfile,cfile,mfile,point=6)
  coef(res3)
  anova(res3,coeff="beta")
  anova(res3,coeff="gamma")
@@ -67,7 +69,12 @@ set.seed(123)
 yfile=system.file("extdata", "ninds_nrank_y.txt", package = "JMcmprsk")
 cfile=system.file("extdata", "ninds_nrank_c.txt", package = "JMcmprsk")
 mfile=system.file("extdata", "ninds_nrank_m.txt", package = "JMcmprsk")
-res=jmo(p=9,s=2, yfile,cfile,mfile,point=10,do.trace = TRUE)
+res=jmo(p=9,s=2, yfile,cfile,mfile,point=6,do.trace = TRUE)
+#if the input are not files but matrixes or data.frames,i.e. type_file=F
+ydata=read.table(yfile,header = T)
+cdata=read.table(cfile,header = T)
+mdata=read.table(mfile)
+res=jmo(p=9,s=2, ydata,cdata,mdata,point=6,do.trace = TRUE,type_file = F)
 coef(res)
 anova(res,coeff="beta")
 anova(res,coeff="gamma")

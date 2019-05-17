@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-
+#include <vector>
 #include <gsl/gsl_randist.h>
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_vector.h>
@@ -17,22 +17,9 @@
 using namespace Rcpp;
 
 namespace jmcspace {
- static const double xs[] = {
-    2.45340708300901249903e-01,    7.37473728545394358719e-01,
-    1.23407621539532300786e+00,    1.73853771211658620678e+00,
-    2.25497400208927552311e+00,    2.78880605842813048055e+00,
-    3.34785456738321632688e+00,    3.94476404011562521040e+00,
-    4.60368244955074427298e+00,    5.38748089001123286199e+00
-};
 
- static const double ws[] = {
-    4.62243669600610089640e-01,    2.86675505362834129720e-01,
-    1.09017206020023320014e-01,    2.48105208874636108814e-02,
-    3.24377334223786183217e-03,    2.28338636016353967260e-04,
-    7.80255647853206369398e-06,    1.08606937076928169398e-07,
-    4.39934099227318055366e-10,    2.22939364553415129254e-13
-};
-
+//const std::vector<double> xs;
+//const std::vector<double> ws;
 
 
  double HAZ(const gsl_matrix *H, const double t);
@@ -83,7 +70,9 @@ namespace jmcspace {
        const gsl_vector *M1,
        const int p1a,
        const int maxl,
-	   const int point
+       const int point,
+       const std::vector<double> xs,  
+       const std::vector<double> ws
        );
 
 
@@ -101,7 +90,9 @@ namespace jmcspace {
            const gsl_vector *M1,
            const int p1a,
            const int maxl,
-		   const int point
+           const int point,
+           const std::vector<double> xs,  
+           const std::vector<double> ws
            );
 
 
@@ -129,7 +120,9 @@ namespace jmcspace {
           const gsl_vector *M1,
           const int p1a,
           const int maxl,
-		  const int point
+          const int point,
+          const std::vector<double> xs,  
+          const std::vector<double> ws
           );
 
 
@@ -147,7 +140,9 @@ namespace jmcspace {
           const gsl_vector *M1,
           const int p1a,
           const int maxl,
-		  const int point
+          const int point,
+          const std::vector<double> xs,  
+          const std::vector<double> ws
           );
 
 
@@ -168,7 +163,7 @@ namespace jmcspace {
          const gsl_matrix *sig
          );
 //declare before use it
-Rcpp::List jmc_cmain(int k, int n1,int p1,int p2, int maxl, int p1a, int maxiterations, int point,std::string yfile, std::string cfile, std::string mfile, int  trace);		 
+Rcpp::List jmc_cmain(int k, int n1,int p1,int p2, int maxl, int p1a, int maxiterations, int point, std::vector<double>xs,  std::vector<double> ws, std::string yfile, std::string cfile, std::string mfile, int  trace);		 
 #define array_size 100000
 #define kappa 100
 }

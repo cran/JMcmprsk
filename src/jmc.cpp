@@ -14,7 +14,9 @@ namespace jmcspace {
            const gsl_vector *M1,
            const int p1a,
            const int maxl,
-		   const int point
+		   const int point,
+		   const std::vector<double> xs,  
+	       const std::vector<double> ws
            )
 {
     int p1=beta->size;
@@ -24,6 +26,7 @@ namespace jmcspace {
     int b =H02->size2;      
     int d =Cov->size1;
     //int n1 = Y->size1;
+	
     int k = M1->size;
     int p,q,j,t,u,i,r;
     double temp;
@@ -43,7 +46,7 @@ namespace jmcspace {
                *FUNWBS=gsl_matrix_alloc(maxl*p1a*(p1a+1)/2,k);
     int status;
     status = GetE(FUNU,FUNUS,FUNB,FUNBS,FUNBU,FUNE,FUNUSE,FUNUE,FUNW,FUNWB,FUNWBS,beta,gamma,vee,H01,H02,
-                  sigma,sig,Y,C,M1,p1a,maxl,point);
+                  sigma,sig,Y,C,M1,p1a,maxl,point,xs,ws);
     if (status==100) return status;
     gsl_vector * X = gsl_vector_alloc(p2);                         /* covariates for C */
     gsl_vector * RX= gsl_vector_alloc(p2);                         /* covariates for subjects in risk set */
@@ -402,7 +405,9 @@ namespace jmcspace {
           const gsl_vector *M1,
           const int p1a,
           const int maxl,
-		  const int point
+		  const int point,
+		  const std::vector<double> xs,  
+	      const std::vector<double> ws
           )
 {
     int p1=beta->size;
@@ -726,7 +731,9 @@ namespace jmcspace {
           const gsl_vector *M1,
           const int p1a,
           const int maxl,
-		  const int point
+		  const int point,
+		  const std::vector<double> xs,  
+	      const std::vector<double> ws
           )		  
 {
     int p1=beta->size;
@@ -1149,7 +1156,9 @@ namespace jmcspace {
     const gsl_vector *M1,
     const int p1a,
     const int maxl,
-	const int point
+	const int point,
+	const std::vector<double> xs,  
+	const std::vector<double> ws
 )
 {
   int p1=beta->size;
@@ -1173,7 +1182,7 @@ namespace jmcspace {
       *FUNWBS=gsl_matrix_alloc(maxl*p1a*(p1a+1)/2,k);
       int status;
       status = GetE(FUNU,FUNUS,FUNB,FUNBS,FUNBU,FUNE,FUNUSE,FUNUE,FUNW,FUNWB,FUNWBS,beta,gamma,vee,H01,H02,
-                    *sigma,sig,Y,C,M1,p1a,maxl,point);
+                    *sigma,sig,Y,C,M1,p1a,maxl,point,xs,ws);
       if (status==100) return status;
       gsl_vector * SX = gsl_vector_alloc(p2);
       gsl_matrix * SXX = gsl_matrix_alloc(p2,p2);
@@ -1390,7 +1399,7 @@ namespace jmcspace {
       return 0;      
 }
 
-Rcpp::List jmc_cmain(int k, int n1,int p1,int p2, int maxl, int p1a, int maxiterations, int point,std::string yfile, std::string cfile, std::string mfile, int trace)
+Rcpp::List jmc_cmain(int k, int n1,int p1,int p2, int maxl, int p1a, int maxiterations, int point,std::vector<double> xs,  std::vector<double> ws, std::string yfile, std::string cfile, std::string mfile, int trace)
 { 
   int g=2;
   
@@ -1677,7 +1686,7 @@ Rcpp::List jmc_cmain(int k, int n1,int p1,int p2, int maxl, int p1a, int maxiter
     gsl_matrix_memcpy(presig, sig); 
     presigma=sigma; 
     /* get new parameter estimates */
-    status = EM(beta,gamma,vee,H01,H02,&sigma,sig,Y,C,M1,p1a,maxl,point);
+    status = EM(beta,gamma,vee,H01,H02,&sigma,sig,Y,C,M1,p1a,maxl,point,xs,ws);
   if(trace==1){	
     Rprintf("iter=%d   status=%d\n",iter,status);
     Rprintf("Beta = \n");
@@ -1740,7 +1749,7 @@ Rcpp::List jmc_cmain(int k, int n1,int p1,int p2, int maxl, int p1a, int maxiter
   if(status != 100 && iter<maxiterations)
   {
     /* if algorithm coverges, compute the variance-covariance matrix of parameters ***/
-    status = GetCov(Cov,beta,gamma,vee,H01,H02,sigma,sig,Y,C,M1,p1a,maxl,point);
+    status = GetCov(Cov,beta,gamma,vee,H01,H02,sigma,sig,Y,C,M1,p1a,maxl,point,xs,ws);
     if(status==100) 
     {
       Rprintf("program stops because of error\n");
@@ -1856,7 +1865,7 @@ Rcpp::List jmc_cmain(int k, int n1,int p1,int p2, int maxl, int p1a, int maxiter
 	     sd_sigma(i)=sqrt(gsl_vector_get(vsig,i));	
 	    }
 	
-	 loglike=Getloglik(beta,gamma,vee,H01,H02,sigma,sig,Y,C,M1,p1a,maxl,point);
+	 loglike=Getloglik(beta,gamma,vee,H01,H02,sigma,sig,Y,C,M1,p1a,maxl,point,xs,ws);
 
 	 }
     }      
@@ -1900,6 +1909,6 @@ Rcpp::List jmc_cmain(int k, int n1,int p1,int p2, int maxl, int p1a, int maxiter
   ret["se_sigma"] = sd_sigma; 
   ret["loglike"] = loglike; 
   
-   return ret;
+  return ret;
 }
 }

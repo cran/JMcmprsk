@@ -5,7 +5,7 @@
 \title{Joint Modelling for Continuous outcomes}
 \usage{
 jmc(p, yfile, cfile, mfile, point = 20, maxiterations = 1e+05,
-  do.trace = FALSE)
+  do.trace = FALSE, type_file = TRUE)
 }
 \arguments{
 \item{p}{The dimension of fixed effects (include intercept) in yfile.}
@@ -21,6 +21,8 @@ jmc(p, yfile, cfile, mfile, point = 20, maxiterations = 1e+05,
 \item{maxiterations}{Maximum values of iterations. Default is 100000.}
 
 \item{do.trace}{Print detailed information of each iteration. Default is false, i.e., not to print the iteration details.}
+
+\item{type_file}{Types of inputs. Default is true, i.e.  data files with headers. If set to "F", inputs are changed to data matrixes or data.frames (with headers)}
 
 \item{...}{further arguments passed to or from other methods.}
 }
@@ -63,6 +65,11 @@ yfile=system.file("extdata", "fvc621_y.txt", package = "JMcmprsk")
 cfile=system.file("extdata", "fvc621_c.txt", package = "JMcmprsk")
 mfile=system.file("extdata", "fvc621_m.txt", package = "JMcmprsk")
 res1=jmc(p=8,yfile,cfile,mfile,do.trace = TRUE)
+#if the input are not files but matrixes or data.frames,i.e. type_file=F
+ ydata=read.table(yfile,header = T)
+ cdata=read.table(cfile,header = T)
+ mdata=read.table(mfile)
+ res1=jmc(p=8,ydata,cdata,mdata, do.trace = TRUE,type_file = F)
 coef(res1) 
 anova(res1,coeff="beta") 
 anova(res1,coeff="gamma")   

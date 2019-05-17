@@ -16,7 +16,9 @@ namespace jmospace {
        const int bq,
 	   const int K_num,
 	   const int j_max,
-	   const int point	   
+	   const int point,
+	   const std::vector<double> xs,  
+	   const std::vector<double> ws   
        )
 
 {
@@ -56,7 +58,7 @@ namespace jmospace {
     int status;
 
 
-    status = GetE(FUNU,FUNUS,FUNB,FUNBS,FUNBU,FUNE,FUNUSE,FUNUE,FUNP,FUNPS,FUNPR1,FUNPR2,beta,beta2,theta,gamma,vee,H01,H02,sig,Y,C,M1,p1a,bq, K_num, j_max,point);
+    status = GetE(FUNU,FUNUS,FUNB,FUNBS,FUNBU,FUNE,FUNUSE,FUNUE,FUNP,FUNPS,FUNPR1,FUNPR2,beta,beta2,theta,gamma,vee,H01,H02,sig,Y,C,M1,p1a,bq, K_num, j_max,point,xs,ws);
 
     if (status==100) return status;
 
@@ -494,7 +496,9 @@ namespace jmospace {
            const int bq,
 		   const int K_num,
 		   const int j_max,
-		   const int point
+		   const int point,
+		   const std::vector<double> xs,  
+	       const std::vector<double> ws
            )
 {
 
@@ -539,7 +543,7 @@ namespace jmospace {
 
     int status;
     status = GetE(FUNU,FUNUS,FUNB,FUNBS,FUNBU,FUNE,FUNUSE,FUNUE,FUNP,FUNPS,FUNPR1,FUNPR2,beta,beta2,theta,gamma,vee,H01,H02,
-                  sig,Y,C,M1,p1a,bq,K_num, j_max,point);
+                  sig,Y,C,M1,p1a,bq,K_num, j_max,point,xs,ws);
 
     if (status==100) return status;
 
@@ -1056,7 +1060,9 @@ namespace jmospace {
           const int bq,
 		  const int K_num,
 		  const int j_max,
-		  const int point
+		  const int point,
+		  const std::vector<double> xs,  
+	      const std::vector<double> ws
           )
 
 {
@@ -1785,7 +1791,9 @@ namespace jmospace {
           const int p1a,
           const int bq,
 		  const int K_num,
-		  const int point
+		  const int point,
+		  const std::vector<double> xs,  
+	      const std::vector<double> ws
           )
 {
     int p1=beta->size;
@@ -2454,7 +2462,7 @@ namespace jmospace {
 
 }
 
-Rcpp::List jmo_cmain(int k, int n1,int p1,int p2, int p1a, int bq,int K_num, int j_max, int point, std::vector<double>beta_val, std::vector<double>theta_val, int maxiterations,std::string yfile, std::string cfile, std::string mfile, int trace)
+Rcpp::List jmo_cmain(int k, int n1,int p1,int p2, int p1a, int bq,int K_num, int j_max, int point, std::vector<double>xs,  std::vector<double> ws,std::vector<double>beta_val, std::vector<double>theta_val, int maxiterations,std::string yfile, std::string cfile, std::string mfile, int trace)
 { 
     int i,j,t,g=2;  
 	
@@ -2839,7 +2847,7 @@ Rcpp::List jmo_cmain(int k, int n1,int p1,int p2, int p1a, int bq,int K_num, int
         /* get new parameter estimates */
 
 
-        status = EM(beta,beta2,theta,gamma,vee,H01,H02,sig,Y,C,M1,p1a,bq, K_num, j_max,point);
+        status = EM(beta,beta2,theta,gamma,vee,H01,H02,sig,Y,C,M1,p1a,bq, K_num, j_max,point,xs,ws);
 		if(trace==1){	
 		
            Rprintf("iter=%d   status=%d\n",iter,status);
@@ -2946,7 +2954,7 @@ Rcpp::List jmo_cmain(int k, int n1,int p1,int p2, int p1a, int bq,int K_num, int
 
         /* if algorithm coverges, compute the variance-covariance matrix of parameters ***/
 
-        status = GetCov(Cov,beta,beta2,theta,gamma,vee,H01,H02,sig,Y,C,M1,p1a,bq, K_num,j_max,point);
+        status = GetCov(Cov,beta,beta2,theta,gamma,vee,H01,H02,sig,Y,C,M1,p1a,bq, K_num,j_max,point,xs,ws);
 
         if(status==100) 
         {
@@ -3140,7 +3148,7 @@ Rcpp::List jmo_cmain(int k, int n1,int p1,int p2, int p1a, int bq,int K_num, int
 
 
 
-            loglike=Getloglik(beta,beta2,theta,gamma,vee,H01,H02,sig,Y,C,M1,p1a,bq, K_num,point);
+            loglike=Getloglik(beta,beta2,theta,gamma,vee,H01,H02,sig,Y,C,M1,p1a,bq, K_num,point,xs,ws);
 
            // fRprintf(output_F,"loglikelihood = %f\n",loglike);
 
