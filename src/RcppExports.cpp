@@ -57,10 +57,55 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// SimDataC
+Rcpp::List SimDataC(SEXP k_val, SEXP p1_val, SEXP p1a_val, SEXP p2_val, SEXP g_val, SEXP truebeta, SEXP truegamma, SEXP randeffect, SEXP yfn, SEXP cfn, SEXP mfn);
+RcppExport SEXP _JMcmprsk_SimDataC(SEXP k_valSEXP, SEXP p1_valSEXP, SEXP p1a_valSEXP, SEXP p2_valSEXP, SEXP g_valSEXP, SEXP truebetaSEXP, SEXP truegammaSEXP, SEXP randeffectSEXP, SEXP yfnSEXP, SEXP cfnSEXP, SEXP mfnSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type k_val(k_valSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type p1_val(p1_valSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type p1a_val(p1a_valSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type p2_val(p2_valSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type g_val(g_valSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type truebeta(truebetaSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type truegamma(truegammaSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type randeffect(randeffectSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type yfn(yfnSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type cfn(cfnSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type mfn(mfnSEXP);
+    rcpp_result_gen = Rcpp::wrap(SimDataC(k_val, p1_val, p1a_val, p2_val, g_val, truebeta, truegamma, randeffect, yfn, cfn, mfn));
+    return rcpp_result_gen;
+END_RCPP
+}
+// SimDataO
+Rcpp::List SimDataO(SEXP k_val, SEXP p1_val, SEXP p1a_val, SEXP p2_val, SEXP g_val, SEXP truebeta, SEXP truetheta, SEXP truegamma, SEXP randeffect, SEXP yfn, SEXP cfn, SEXP mfn);
+RcppExport SEXP _JMcmprsk_SimDataO(SEXP k_valSEXP, SEXP p1_valSEXP, SEXP p1a_valSEXP, SEXP p2_valSEXP, SEXP g_valSEXP, SEXP truebetaSEXP, SEXP truethetaSEXP, SEXP truegammaSEXP, SEXP randeffectSEXP, SEXP yfnSEXP, SEXP cfnSEXP, SEXP mfnSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type k_val(k_valSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type p1_val(p1_valSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type p1a_val(p1a_valSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type p2_val(p2_valSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type g_val(g_valSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type truebeta(truebetaSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type truetheta(truethetaSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type truegamma(truegammaSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type randeffect(randeffectSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type yfn(yfnSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type cfn(cfnSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type mfn(mfnSEXP);
+    rcpp_result_gen = Rcpp::wrap(SimDataO(k_val, p1_val, p1a_val, p2_val, g_val, truebeta, truetheta, truegamma, randeffect, yfn, cfn, mfn));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_JMcmprsk_jmc_main", (DL_FUNC) &_JMcmprsk_jmc_main, 14},
     {"_JMcmprsk_jmo_main", (DL_FUNC) &_JMcmprsk_jmo_main, 18},
+    {"_JMcmprsk_SimDataC", (DL_FUNC) &_JMcmprsk_SimDataC, 11},
+    {"_JMcmprsk_SimDataO", (DL_FUNC) &_JMcmprsk_SimDataO, 12},
     {NULL, NULL, 0}
 };
 

@@ -6,7 +6,7 @@ cfile=system.file("extdata", "fvc621_c.txt", package = "JMcmprsk")
 mfile=system.file("extdata", "fvc621_m.txt", package = "JMcmprsk")
 
 ## ---- eval=FALSE, message=FALSE, warning=FALSE---------------------------
-#  jmcfit = jmc(p=8,yfile,cfile,mfile,point=20,do.trace = F)
+#  jmcfit = jmc(p=7,yfile,cfile,mfile,point=20,do.trace = F)
 #  
 
 ## ---- echo=TRUE, message=FALSE, warning=FALSE, results='base'------------

@@ -203,7 +203,7 @@ jmo <- function (p,s,yfile,cfile,mfile,point=20,maxiterations=100000,do.trace=FA
       myresult$sigma_matrix[i,j]=-myresult$sigma_matrix[i,j]
     }
   
-  
+  myresult$k=k
   myresult$type="jmo";
   
   class(myresult) <- "JMcmprsk"

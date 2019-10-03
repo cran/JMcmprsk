@@ -4,7 +4,7 @@ date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 bibliography: JMcmprsk.bib
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{JMcmprsk Vignette}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -88,7 +88,7 @@ The number of rows in yfile is the total number of measurements for all subjects
 
 Hence, the model can be specified by the function jmc():
 ```{r, eval=FALSE, message=FALSE, warning=FALSE}
-jmcfit = jmc(p=8,yfile,cfile,mfile,point=20,do.trace = F)
+jmcfit = jmc(p=7,yfile,cfile,mfile,point=20,do.trace = F)
 
 ```
 

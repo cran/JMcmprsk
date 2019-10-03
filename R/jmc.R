@@ -1,6 +1,6 @@
 ##' Joint modeling of longitudinal continuous data and competing risks
 ##' @title Joint Modelling for Continuous outcomes 
-##' @param p  The dimension of fixed effects (include intercept) in yfile.
+##' @param p  The dimension of fixed effects (not including intercept) in yfile.
 ##' @param yfile Y matrix for longitudinal measurements in long format. For example, for a subject with n measurements, there should be n rows for this subject. The # of rows in y matrix is the total number of measurements for all subjects in the study. The columns in Y should start with the longitudinal outcome (column 1), the covariates for the random effects, and then the covariates for the fixed effects.
 ##' @param cfile C matrix for competing risks failure time data. Each subject has one data entry, so the number of rows equals to the number of subjects. The survival / censoring time is included in the first column, and the failure type coded as 0 (censored events), 1 (risk 1), or 2 (risk 2) is given in the second column. Two competing risks are assumed. The covariates are included in the third column and on.
 ##' @param mfile M vector to indicate the number of longitudinal measurements per subject. The number of rows equals to the number of subjects.
@@ -43,12 +43,12 @@
 ##' yfile=system.file("extdata", "fvc621_y.txt", package = "JMcmprsk")
 ##' cfile=system.file("extdata", "fvc621_c.txt", package = "JMcmprsk")
 ##' mfile=system.file("extdata", "fvc621_m.txt", package = "JMcmprsk")
-##' res1=jmc(p=8,yfile,cfile,mfile,do.trace = TRUE)
+##' res1=jmc(p=7,yfile,cfile,mfile,do.trace = TRUE)
 ##' #if the input are not files but matrixes or data.frames,i.e. type_file=F
 ##'  ydata=read.table(yfile,header = T)
 ##'  cdata=read.table(cfile,header = T)
 ##'  mdata=read.table(mfile)
-##'  res1=jmc(p=8,ydata,cdata,mdata, do.trace = TRUE,type_file = F)
+##'  res1=jmc(p=7,ydata,cdata,mdata, do.trace = TRUE,type_file = F)
 ##' coef(res1) 
 ##' anova(res1,coeff="beta") 
 ##' anova(res1,coeff="gamma")   
@@ -158,8 +158,10 @@ jmc<- function (p,yfile,cfile,mfile,point=20,maxiterations=100000,do.trace=FALSE
   names(myresult$betas)=ynames[(ydim[2]-p+1):ydim[2]]
 
   colnames(myresult$gamma_matrix)=cnames[3:(p2+3-1)]
-  
+
+  myresult$k=k
   class(myresult) <- "JMcmprsk"
+  
   return (myresult)
 }
 

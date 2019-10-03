@@ -11,7 +11,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-<meta name="date" content="2019-05-17" />
+<meta name="date" content="2019-10-03" />
 
 <title>Joint Models for Longitudinal Measurements and Competing Risks Failure Time Data</title>
 
@@ -93,7 +93,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 <h1 class="title toc-ignore">Joint Models for Longitudinal Measurements and Competing Risks Failure Time Data</h1>
-<h4 class="date">2019-05-17</h4>
+<h4 class="date">2019-10-03</h4>
 
 
 
@@ -165,7 +165,7 @@ cfile=<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</
 mfile=<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;fvc621_m.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;JMcmprsk&quot;</span>)</code></pre></div>
 <p>The number of rows in yfile is the total number of measurements for all subjects in the study. The columns in yfile should start with the longitudinal outcome (column 1), the covariates for the random effects, and then the covariates for the fixed effects. For cfile, the survival / censoring time is included in the first column, and the failure type coded as 0 (censored events), 1 (risk 1), or 2 (risk 2) is given in the second column. Two competing risks are assumed. The covariates are included in the third column and on. mfile is to indicate the number of longitudinal measurements per subject. The number of rows equals to the number of subjects.</p>
 <p>Hence, the model can be specified by the function jmc():</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">jmcfit =<span class="st"> </span><span class="kw">jmc</span>(<span class="dt">p=</span><span class="dv">8</span>,yfile,cfile,mfile,<span class="dt">point=</span><span class="dv">20</span>,<span class="dt">do.trace =</span> F)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">jmcfit =<span class="st"> </span><span class="kw">jmc</span>(<span class="dt">p=</span><span class="dv">7</span>,yfile,cfile,mfile,<span class="dt">point=</span><span class="dv">20</span>,<span class="dt">do.trace =</span> F)</code></pre></div>
 <p>with <span class="math inline">\(p\)</span> the dimension of fixed effects (include intercept) in yfile, the option “point” is the number of points used to approximate the integral in the E-step, default is 20, and “do.trace” is used to control whether the programm prints the iteration details. If we would like to see a concise summary of the result we can simply type</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#because of the long running time, we save the jmo and jmc results within the package</span>
 fitfile=<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;runfit.RData&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;JMcmprsk&quot;</span>)

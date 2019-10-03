@@ -8,7 +8,7 @@ jmc(p, yfile, cfile, mfile, point = 20, maxiterations = 1e+05,
   do.trace = FALSE, type_file = TRUE)
 }
 \arguments{
-\item{p}{The dimension of fixed effects (include intercept) in yfile.}
+\item{p}{The dimension of fixed effects (not including intercept) in yfile.}
 
 \item{yfile}{Y matrix for longitudinal measurements in long format. For example, for a subject with n measurements, there should be n rows for this subject. The # of rows in y matrix is the total number of measurements for all subjects in the study. The columns in Y should start with the longitudinal outcome (column 1), the covariates for the random effects, and then the covariates for the fixed effects.}
 
@@ -64,12 +64,12 @@ set.seed(123)
 yfile=system.file("extdata", "fvc621_y.txt", package = "JMcmprsk")
 cfile=system.file("extdata", "fvc621_c.txt", package = "JMcmprsk")
 mfile=system.file("extdata", "fvc621_m.txt", package = "JMcmprsk")
-res1=jmc(p=8,yfile,cfile,mfile,do.trace = TRUE)
+res1=jmc(p=7,yfile,cfile,mfile,do.trace = TRUE)
 #if the input are not files but matrixes or data.frames,i.e. type_file=F
  ydata=read.table(yfile,header = T)
  cdata=read.table(cfile,header = T)
  mdata=read.table(mfile)
- res1=jmc(p=8,ydata,cdata,mdata, do.trace = TRUE,type_file = F)
+ res1=jmc(p=7,ydata,cdata,mdata, do.trace = TRUE,type_file = F)
 coef(res1) 
 anova(res1,coeff="beta") 
 anova(res1,coeff="gamma")   
