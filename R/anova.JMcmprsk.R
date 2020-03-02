@@ -62,8 +62,8 @@ anova.JMcmprsk <-
         WaldTest <- rbind(WaldTest,data.frame(Chisq = W, df = ngamma, 
                                "Pr(>|Chi|)" = pval, check.names = FALSE, row.names =paste0("gamma",j) ))
       } 
-  } else {
-    print("Anova Error or Methods not developed yet!")
+  } else {#change from print to message
+    message("Anova Error or Methods not developed yet!")
     WaldTest=NULL
    }      
       
@@ -99,8 +99,8 @@ anova.JMcmprsk <-
                                                 "Pr(>|Chi|)" = pval, check.names = FALSE, row.names =paste0("gamma",j) ))
         }
         
-      }    else {
-        print("Anova Error or Methods not developed yet!")
+      }    else {#change from print to message
+        message("Anova Error or Methods not developed yet!")
         WaldTest=NULL
       }     
       WaldTest

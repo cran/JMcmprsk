@@ -8,7 +8,7 @@
 ## Licensed under GNU GPL 2 or later
 
 # The version set here will propagate to other files from here
-AC_INIT([JMcmprsk], 0.91)
+AC_INIT([JMcmprsk], 0.9.7)
 
 # Checks for common programs using default macros
 AC_PROG_CC

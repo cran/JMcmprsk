@@ -23,8 +23,6 @@ jmc(p, yfile, cfile, mfile, point = 20, maxiterations = 1e+05,
 \item{do.trace}{Print detailed information of each iteration. Default is false, i.e., not to print the iteration details.}
 
 \item{type_file}{Types of inputs. Default is true, i.e.  data files with headers. If set to "F", inputs are changed to data matrixes or data.frames (with headers)}
-
-\item{...}{further arguments passed to or from other methods.}
 }
 \value{
 Object of class \code{JMcmprsk} with elements
@@ -58,7 +56,7 @@ coef(res2)
 anova(res2,coeff="beta")
 anova(res2,coeff="gamma")
 #testing the function on real data with trace on
-\dontrun{
+\donttest{
 require(JMcmprsk)
 set.seed(123)
 yfile=system.file("extdata", "fvc621_y.txt", package = "JMcmprsk")

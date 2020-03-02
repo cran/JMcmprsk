@@ -34,6 +34,14 @@ SimDataO(k_val, p1_val, p1a_val, p2_val, g_val, truebeta, truetheta,
 }
 \value{
 Files with names yfn, cfn and mfn.
+\tabular{ll}{
+\code{censoring_rate} \tab Censoring rate of the survival data. \cr
+\code{rate1} \tab Censoring rate of competing risk 1. \cr
+\code{rate2} \tab Censoring rate of competing risk 2. \cr
+\code{yfn} \tab Filename of genereated Y matrix for longitudinal measurements. \cr
+\code{cfn} \tab Filename of genereated C matrix for competing risks failure time data. \cr
+\code{mfn} \tab  Filename of genereated M vector to indicate the number of longitudinal measurements per subject.
+ }
 }
 \description{
 Simulation of ordinal longitudinal outcome and competing risks data
@@ -51,7 +59,7 @@ truebeta=c(-1,1.5,0.8);truetheta=c(-0.5,1);truegamma=c(0.8,-1,0.5,-1); randeffec
 #writing files
 SimDataO(k_val, p1_val, p1a_val, p2_val, g_val,
       truebeta, truetheta, truegamma, randeffect, yfn,  cfn,  mfn)
-\dontrun{
+\donttest{
 jmo(p=3,s=1, yfn,cfn,mfn,point=10,do.trace = TRUE)
 }
 }

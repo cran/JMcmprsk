@@ -25,8 +25,6 @@ jmo(p, s, yfile, cfile, mfile, point = 20, maxiterations = 1e+05,
 \item{do.trace}{Print detailed information of each iteration. Default is false, not to print the iteration details.}
 
 \item{type_file}{Types of inputs. Default is true, i.e.  data files with headers. If set to "F", inputs are changed to data matrixes or data.frames (with headers)}
-
-\item{...}{further arguments passed to or from other methods.}
 }
 \value{
 Object of class \code{JMcmprsk} with elements
@@ -63,7 +61,7 @@ Joint modeling of longitudinal ordinal data and competing risks
  anova(res3,coeff="gamma")
  anova(res3,coeff="alpha")
 #testing the function on real data with trace on
-\dontrun{
+\donttest{
 require(JMcmprsk)
 set.seed(123)
 yfile=system.file("extdata", "ninds_nrank_y.txt", package = "JMcmprsk")

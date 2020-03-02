@@ -9,7 +9,6 @@
 ##' @param maxiterations Maximum values of iterations. Default is 100000.
 ##' @param do.trace Print detailed information of each iteration. Default is false, not to print the iteration details.
 ##' @param type_file Types of inputs. Default is true, i.e.  data files with headers. If set to "F", inputs are changed to data matrixes or data.frames (with headers)
-##' @param ... further arguments passed to or from other methods.
 ##' @return Object of class \code{JMcmprsk} with elements
 ##'   \tabular{ll}{
 ##'       \code{vcmatrix}    \tab  The variance-covariance matrix for all the parameters. The parameters are in the order: \eqn{\beta}, \eqn{\alpha}, \eqn{\theta}, \eqn{\gamma}, \eqn{\nu}, and \eqn{\Sigma}. The elements in \eqn{\Sigma} are output in the order along the main diagonal line, then the second main diagonal line, and so on. \cr
@@ -40,7 +39,7 @@
 ##'  anova(res3,coeff="gamma")
 ##'  anova(res3,coeff="alpha")
 ##' #testing the function on real data with trace on
-##'\dontrun{
+##'\donttest{
 ##' require(JMcmprsk)
 ##' set.seed(123)
 ##' yfile=system.file("extdata", "ninds_nrank_y.txt", package = "JMcmprsk")

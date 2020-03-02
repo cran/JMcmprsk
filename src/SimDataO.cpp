@@ -71,7 +71,14 @@ void MulM(const gsl_matrix *XX, const gsl_vector *X, gsl_vector *beta)
 //' @param cfn  Filename of genereated C matrix for competing risks failure time data.
 //' @param mfn  Filename of genereated M vector to indicate the number of longitudinal measurements per subject.
 //' @return Files with names yfn, cfn and mfn.
-//'   
+//' \tabular{ll}{
+//' \code{censoring_rate} \tab Censoring rate of the survival data. \cr
+//' \code{rate1} \tab Censoring rate of competing risk 1. \cr
+//' \code{rate2} \tab Censoring rate of competing risk 2. \cr
+//' \code{yfn} \tab Filename of genereated Y matrix for longitudinal measurements. \cr
+//' \code{cfn} \tab Filename of genereated C matrix for competing risks failure time data. \cr
+//' \code{mfn} \tab  Filename of genereated M vector to indicate the number of longitudinal measurements per subject.
+//'  } 
 //' @examples
 //' # A toy example testint data generations
 //' require(JMcmprsk)
@@ -84,7 +91,7 @@ void MulM(const gsl_matrix *XX, const gsl_vector *X, gsl_vector *beta)
 //' #writing files
 //' SimDataO(k_val, p1_val, p1a_val, p2_val, g_val,
 //'       truebeta, truetheta, truegamma, randeffect, yfn,  cfn,  mfn)
-//' \dontrun{
+//' \donttest{
 //' jmo(p=3,s=1, yfn,cfn,mfn,point=10,do.trace = TRUE)
 //'}
 //' @references
