@@ -4,8 +4,20 @@
 \alias{SimDataO}
 \title{Data simulation of ordinal outcomes and competing risks}
 \usage{
-SimDataO(k_val, p1_val, p1a_val, p2_val, g_val, truebeta, truetheta,
-  truegamma, randeffect, yfn, cfn, mfn)
+SimDataO(
+  k_val,
+  p1_val,
+  p1a_val,
+  p2_val,
+  g_val,
+  truebeta,
+  truetheta,
+  truegamma,
+  randeffect,
+  yfn,
+  cfn,
+  mfn
+)
 }
 \arguments{
 \item{k_val}{The number of subjects in study.}

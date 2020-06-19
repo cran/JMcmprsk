@@ -33,8 +33,6 @@
 ##' mfile=system.file("extdata", "jmcsimm.txt", package = "JMcmprsk")
 ##' res2=jmc(p=4,yfile,cfile,mfile,point=6)
 ##' coef(res2)
-##' anova(res2,coeff="beta")
-##' anova(res2,coeff="gamma")
 ##' #testing the function on real data with trace on
 ##' \donttest{
 ##' require(JMcmprsk)

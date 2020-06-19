@@ -4,9 +4,20 @@
 \alias{jmc_long}
 \title{An integrated function for reconstructing data and do the joint modelling}
 \usage{
-jmc_long(long_data, surv_data, out, FE, RE, ID, cate = NULL,
-  intcpt = 1, quad.points = 10, max.iter = 10000, quiet = TRUE,
-  do.trace = FALSE)
+jmc_long(
+  long_data,
+  surv_data,
+  out,
+  FE,
+  RE,
+  ID,
+  cate = NULL,
+  intcpt = 1,
+  quad.points = 10,
+  max.iter = 10000,
+  quiet = TRUE,
+  do.trace = FALSE
+)
 }
 \arguments{
 \item{long_data}{Data matrix for longitudinal in long form. The time variable should be labeled 'time'.}

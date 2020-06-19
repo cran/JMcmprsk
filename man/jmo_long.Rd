@@ -4,9 +4,21 @@
 \alias{jmo_long}
 \title{An integrated function for reconstructing data and do the joint modelling}
 \usage{
-jmo_long(long_data, surv_data, out, FE, RE, NP, ID, cate = NULL,
-  intcpt = 1, quad.points = 20, max.iter = 10000, quiet = TRUE,
-  do.trace = FALSE)
+jmo_long(
+  long_data,
+  surv_data,
+  out,
+  FE,
+  RE,
+  NP,
+  ID,
+  cate = NULL,
+  intcpt = 1,
+  quad.points = 20,
+  max.iter = 10000,
+  quiet = TRUE,
+  do.trace = FALSE
+)
 }
 \arguments{
 \item{long_data}{Data matrix for longitudinal in long format. The time variable should be labeled 'time'.}

@@ -41,8 +41,8 @@ void MulM(const gsl_matrix *XX, const gsl_vector *X, gsl_vector *beta)
     int p = XX->size1;
     int q = XX->size2;
 
-    int i,j;
-    double temp;
+    int i=0,j=0;
+    double temp=0.0;
 
     for(i=0;i<p;i++)
     {
@@ -113,8 +113,8 @@ Rcpp::List   SimDataO(SEXP k_val,SEXP p1_val,SEXP p1a_val,SEXP p2_val, SEXP g_va
 	size_t g=as<int> (g_val);
 	size_t p1a=as<int> (p1a_val);
 	size_t bq=1;
-	size_t n=0,n1;
-	size_t i,j;
+	size_t n=0,n1=0;
+	size_t i=0,j=0;
   
 	std::string yfile=as<std::string>(yfn);
 	std::string cfile=as<std::string>(cfn);
@@ -136,29 +136,29 @@ Rcpp::List   SimDataO(SEXP k_val,SEXP p1_val,SEXP p1a_val,SEXP p2_val, SEXP g_va
       return R_NilValue;	  
     }
     /* allocate space for data */
-    gsl_matrix *C = gsl_matrix_alloc(k,p2+2);
-    gsl_matrix *FY= gsl_matrix_alloc(array_size, p1+p1a+bq+1);         
-    gsl_vector *M1= gsl_vector_alloc(k);
+    gsl_matrix *C = gsl_matrix_calloc(k,p2+2);
+    gsl_matrix *FY= gsl_matrix_calloc(array_size, p1+p1a+bq+1);         
+    gsl_vector *M1= gsl_vector_calloc(k);
     gsl_matrix_set_zero(FY);
 
 
 
     /* allocate space for help matrices */
-    gsl_vector *RA= gsl_vector_alloc(p1a+1);
-    gsl_vector *RI= gsl_vector_alloc(p1a+1);
-    gsl_vector *S=gsl_vector_alloc(p1a+1);
-    gsl_matrix *V=gsl_matrix_alloc(p1a+1,p1a+1);
-    gsl_vector *W=gsl_vector_alloc(p1a+1);
+    gsl_vector *RA= gsl_vector_calloc(p1a+1);
+    gsl_vector *RI= gsl_vector_calloc(p1a+1);
+    gsl_vector *S=gsl_vector_calloc(p1a+1);
+    gsl_matrix *V=gsl_matrix_calloc(p1a+1,p1a+1);
+    gsl_vector *W=gsl_vector_calloc(p1a+1);
 
 
     /* allocate space for true parameters */
-    gsl_vector *tbeta = gsl_vector_alloc(p1),
-               *ttheta = gsl_vector_alloc(K_num-1),
-               *tvee = gsl_vector_alloc(g-1);
-    gsl_matrix *tgamma = gsl_matrix_alloc(g,p2);
-    gsl_matrix *tbeta2 = gsl_matrix_alloc(K_num-2,bq);
+    gsl_vector *tbeta = gsl_vector_calloc(p1),
+               *ttheta = gsl_vector_calloc(K_num-1),
+               *tvee = gsl_vector_calloc(g-1);
+    gsl_matrix *tgamma = gsl_matrix_calloc(g,p2);
+    gsl_matrix *tbeta2 = gsl_matrix_calloc(K_num-2,bq);
 
-    gsl_matrix *VC= gsl_matrix_alloc(p1a+1,p1a+1);
+    gsl_matrix *VC= gsl_matrix_calloc(p1a+1,p1a+1);
 
 
 
@@ -167,7 +167,7 @@ Rcpp::List   SimDataO(SEXP k_val,SEXP p1_val,SEXP p1a_val,SEXP p2_val, SEXP g_va
     
     double tsigmab0=reffect_val[0];
     double tsigmau=reffect_val[1];
-    double	rho=0.9, sigmax=1, prob=0.5;
+    double	rho=0.9, sigmax=1.0, prob=0.5;
 	  gsl_vector_set(tvee,0,reffect_val[2]);
     
     double tsigmab0u=sqrt(tsigmab0*tsigmau)*rho;
@@ -230,15 +230,11 @@ Rcpp::List   SimDataO(SEXP k_val,SEXP p1_val,SEXP p1a_val,SEXP p2_val, SEXP g_va
     r = gsl_rng_alloc (T);
 
 
-    int point,t;
-    double crate,rate1,rate2,max_censor=4;
-    double temp,x1,x2,t1,t2,censor,u,b0,error,chisq_x;
+    int point=0,t=0;
+    double crate=0.0,rate1=0.0,rate2=0.0,max_censor=4.0;
+    double temp=0.0,x1=0.0,x2=0.0,t1=0.0,t2=0.0,censor=0.0,u=0.0,b0=0.0,error=0.0,chisq_x=0.0;
 
-    crate=0;
-    rate1=0;
-    rate2=0;
-    point=0;
-
+   
 
     for(j=0;j<k;j++)
     {
@@ -331,7 +327,7 @@ Rcpp::List   SimDataO(SEXP k_val,SEXP p1_val,SEXP p1a_val,SEXP p2_val, SEXP g_va
 
     n1 = point;
 
-    gsl_matrix *Y = gsl_matrix_alloc(n1,p1+p1a+bq+1);      /* true matrix for longitudinal outcome Y **/
+    gsl_matrix *Y = gsl_matrix_calloc(n1,p1+p1a+bq+1);      /* true matrix for longitudinal outcome Y **/
    
     for(i=0;i<n1;i++)
     {
@@ -416,8 +412,9 @@ Rcpp::List   SimDataO(SEXP k_val,SEXP p1_val,SEXP p1a_val,SEXP p2_val, SEXP g_va
     gsl_matrix_free(V);
     gsl_vector_free(W);
 
-
-   
+   	//free random number memory
+	gsl_rng_free(r);
+	
   Rcpp::List ret;
   ret["censoring_rate"] = crate/(double)k;
   ret["rate1"] = rate1/(double)k;

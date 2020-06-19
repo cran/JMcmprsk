@@ -4,8 +4,7 @@
 \alias{anova.JMcmprsk}
 \title{ANOVA of longitudinal model}
 \usage{
-\method{anova}{JMcmprsk}(object, coeff = c("beta", "gamma", "alpha"),
-  ...)
+\method{anova}{JMcmprsk}(object, coeff = c("beta", "gamma", "alpha"), ...)
 }
 \arguments{
 \item{object}{The JMcmprsk object returned by either jmo or jmc function.}

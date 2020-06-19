@@ -37,22 +37,22 @@ namespace jmospace {
     int p,q,j,t,u,m;
 
 
-    gsl_vector *FUNU=gsl_vector_alloc(k);
-    gsl_vector *FUNUS=gsl_vector_alloc(k);
-    gsl_matrix *FUNB=gsl_matrix_alloc(p1a,k);  
-    gsl_matrix *FUNBS=gsl_matrix_alloc(p1a*(p1a+1)/2,k);  
-    gsl_matrix *FUNBU=gsl_matrix_alloc(p1a,k);
+    gsl_vector *FUNU=gsl_vector_calloc(k);
+    gsl_vector *FUNUS=gsl_vector_calloc(k);
+    gsl_matrix *FUNB=gsl_matrix_calloc(p1a,k);  
+    gsl_matrix *FUNBS=gsl_matrix_calloc(p1a*(p1a+1)/2,k);  
+    gsl_matrix *FUNBU=gsl_matrix_calloc(p1a,k);
    
 
-    gsl_matrix *FUNE=gsl_matrix_alloc(g,k), 
-               *FUNUSE=gsl_matrix_alloc(g-1,k),
-               *FUNUE=gsl_matrix_alloc(g-1,k);
+    gsl_matrix *FUNE=gsl_matrix_calloc(g,k), 
+               *FUNUSE=gsl_matrix_calloc(g-1,k),
+               *FUNUE=gsl_matrix_calloc(g-1,k);
 
 
-    gsl_matrix *FUNP=gsl_matrix_alloc(2*j_max,k), 
-               *FUNPS=gsl_matrix_alloc(2*j_max,k),
-               *FUNPR1=gsl_matrix_alloc(2*j_max,k),
-               *FUNPR2=gsl_matrix_alloc(2*j_max,k);
+    gsl_matrix *FUNP=gsl_matrix_calloc(2*j_max,k), 
+               *FUNPS=gsl_matrix_calloc(2*j_max,k),
+               *FUNPR1=gsl_matrix_calloc(2*j_max,k),
+               *FUNPR2=gsl_matrix_calloc(2*j_max,k);
 
 
     int status;
@@ -64,27 +64,27 @@ namespace jmospace {
 
 
 
-    gsl_vector * SX = gsl_vector_alloc(p2);
-    gsl_matrix * SXX = gsl_matrix_alloc(p2,p2);
-    gsl_matrix * XX = gsl_matrix_alloc(p2,p2);
-    gsl_vector * X = gsl_vector_alloc(p2);
-    gsl_vector * gammai = gsl_vector_alloc(p2);
+    gsl_vector * SX = gsl_vector_calloc(p2);
+    gsl_matrix * SXX = gsl_matrix_calloc(p2,p2);
+    gsl_matrix * XX = gsl_matrix_calloc(p2,p2);
+    gsl_vector * X = gsl_vector_calloc(p2);
+    gsl_vector * gammai = gsl_vector_calloc(p2);
   
     double scalef;
   
-    gsl_vector * Z = gsl_vector_alloc(p1);                       
-    gsl_vector * SZ = gsl_vector_alloc(p1);
-    gsl_matrix * SZZ = gsl_matrix_alloc(p1,p1);                  
-    gsl_matrix * ZZ = gsl_matrix_alloc(p1,p1);      
+    gsl_vector * Z = gsl_vector_calloc(p1);                       
+    gsl_vector * SZ = gsl_vector_calloc(p1);
+    gsl_matrix * SZZ = gsl_matrix_calloc(p1,p1);                  
+    gsl_matrix * ZZ = gsl_matrix_calloc(p1,p1);      
 
-    gsl_vector * D= gsl_vector_alloc(bq);                         
-    gsl_vector * SD = gsl_vector_alloc(bq);
-    gsl_matrix * SDD = gsl_matrix_alloc(bq,bq);                    
-    gsl_matrix * DD = gsl_matrix_alloc(bq,bq);                            
+    gsl_vector * D= gsl_vector_calloc(bq);                         
+    gsl_vector * SD = gsl_vector_calloc(bq);
+    gsl_matrix * SDD = gsl_matrix_calloc(bq,bq);                    
+    gsl_matrix * DD = gsl_matrix_calloc(bq,bq);                            
 
 
-   // gsl_vector * bi = gsl_vector_alloc(p1a);
-   // gsl_matrix * bs = gsl_matrix_alloc(p1a,p1a);
+   // gsl_vector * bi = gsl_vector_calloc(p1a);
+   // gsl_matrix * bs = gsl_matrix_calloc(p1a,p1a);
 
 
 
@@ -214,8 +214,8 @@ namespace jmospace {
 
     /* calculate theta */
 
-    gsl_vector *theta_n=gsl_vector_alloc(K_num-1);
-    gsl_vector *theta_d=gsl_vector_alloc(K_num-1);
+    gsl_vector *theta_n=gsl_vector_calloc(K_num-1);
+    gsl_vector *theta_d=gsl_vector_calloc(K_num-1);
  
     gsl_vector_set_zero(theta_n);
     gsl_vector_set_zero(theta_d);
@@ -517,28 +517,28 @@ namespace jmospace {
 
     double temp,scalef;
 
-    gsl_vector *S = gsl_vector_alloc(Cov->size1);
-    gsl_matrix *SS= gsl_matrix_alloc(Cov->size1,Cov->size1);
-    gsl_vector *TS = gsl_vector_alloc(Cov->size1);
+    gsl_vector *S = gsl_vector_calloc(Cov->size1);
+    gsl_matrix *SS= gsl_matrix_calloc(Cov->size1,Cov->size1);
+    gsl_vector *TS = gsl_vector_calloc(Cov->size1);
 
 
-    gsl_vector *FUNU=gsl_vector_alloc(k);
-    gsl_vector *FUNUS=gsl_vector_alloc(k);
-    gsl_matrix *FUNB=gsl_matrix_alloc(p1a,k);  
-    gsl_matrix *FUNBS=gsl_matrix_alloc(p1a*(p1a+1)/2,k);  
-    gsl_matrix *FUNBU=gsl_matrix_alloc(p1a,k);
+    gsl_vector *FUNU=gsl_vector_calloc(k);
+    gsl_vector *FUNUS=gsl_vector_calloc(k);
+    gsl_matrix *FUNB=gsl_matrix_calloc(p1a,k);  
+    gsl_matrix *FUNBS=gsl_matrix_calloc(p1a*(p1a+1)/2,k);  
+    gsl_matrix *FUNBU=gsl_matrix_calloc(p1a,k);
  
    
 
-    gsl_matrix *FUNE=gsl_matrix_alloc(g,k), 
-               *FUNUSE=gsl_matrix_alloc(g-1,k),
-               *FUNUE=gsl_matrix_alloc(g-1,k);
+    gsl_matrix *FUNE=gsl_matrix_calloc(g,k), 
+               *FUNUSE=gsl_matrix_calloc(g-1,k),
+               *FUNUE=gsl_matrix_calloc(g-1,k);
 
 
-    gsl_matrix *FUNP=gsl_matrix_alloc(2*j_max,k), 
-               *FUNPS=gsl_matrix_alloc(2*j_max,k),
-               *FUNPR1=gsl_matrix_alloc(2*j_max,k),
-               *FUNPR2=gsl_matrix_alloc(2*j_max,k);
+    gsl_matrix *FUNP=gsl_matrix_calloc(2*j_max,k), 
+               *FUNPS=gsl_matrix_calloc(2*j_max,k),
+               *FUNPR1=gsl_matrix_calloc(2*j_max,k),
+               *FUNPR2=gsl_matrix_calloc(2*j_max,k);
 
 
     int status;
@@ -548,29 +548,29 @@ namespace jmospace {
     if (status==100) return status;
 
 
-    gsl_vector * X = gsl_vector_alloc(p2);                         /* covariates for C */
-    gsl_vector * RX= gsl_vector_alloc(p2);                         /* covariates for subjects in risk set */
-    gsl_vector *SX = gsl_vector_alloc(p2);           
-    gsl_vector *SRX= gsl_vector_alloc(p2);
-    gsl_vector * gammai = gsl_vector_alloc(p2);
+    gsl_vector * X = gsl_vector_calloc(p2);                         /* covariates for C */
+    gsl_vector * RX= gsl_vector_calloc(p2);                         /* covariates for subjects in risk set */
+    gsl_vector *SX = gsl_vector_calloc(p2);           
+    gsl_vector *SRX= gsl_vector_calloc(p2);
+    gsl_vector * gammai = gsl_vector_calloc(p2);
 
-    gsl_vector * Z = gsl_vector_alloc(p1);                         /* covariates for Y */
-    gsl_vector * SZ = gsl_vector_alloc(p1);
-    gsl_matrix * SZZ = gsl_matrix_alloc(p1,p1);                    /* store sum of ZZ' */
-    gsl_matrix * ZZ = gsl_matrix_alloc(p1,p1);                     /* store ZZ' */
+    gsl_vector * Z = gsl_vector_calloc(p1);                         /* covariates for Y */
+    gsl_vector * SZ = gsl_vector_calloc(p1);
+    gsl_matrix * SZZ = gsl_matrix_calloc(p1,p1);                    /* store sum of ZZ' */
+    gsl_matrix * ZZ = gsl_matrix_calloc(p1,p1);                     /* store ZZ' */
 
-    gsl_vector * D = gsl_vector_alloc(bq);                        
-    gsl_vector * SD = gsl_vector_alloc(bq);
+    gsl_vector * D = gsl_vector_calloc(bq);                        
+    gsl_vector * SD = gsl_vector_calloc(bq);
 
-    gsl_vector * xtilde = gsl_vector_alloc(p1a);
-    gsl_vector * xtilde1 = gsl_vector_alloc(p1a);
-    gsl_vector * bi = gsl_vector_alloc(p1a);
-    gsl_matrix * bs = gsl_matrix_alloc(p1a,p1a);
-//    gsl_matrix * bu = gsl_matrix_alloc(p1a+1,p1a+1);
+    gsl_vector * xtilde = gsl_vector_calloc(p1a);
+    gsl_vector * xtilde1 = gsl_vector_calloc(p1a);
+    gsl_vector * bi = gsl_vector_calloc(p1a);
+    gsl_matrix * bs = gsl_matrix_calloc(p1a,p1a);
+//    gsl_matrix * bu = gsl_matrix_calloc(p1a+1,p1a+1);
 
-    gsl_matrix * VC = gsl_matrix_alloc(p1a+1,p1a+1);
-    gsl_matrix * VI = gsl_matrix_alloc(p1a+1,p1a+1);
-    gsl_matrix * HE = gsl_matrix_alloc(p1a+1,p1a+1);
+    gsl_matrix * VC = gsl_matrix_calloc(p1a+1,p1a+1);
+    gsl_matrix * VI = gsl_matrix_calloc(p1a+1,p1a+1);
+    gsl_matrix * HE = gsl_matrix_calloc(p1a+1,p1a+1);
 
     gsl_matrix_memcpy(VC,sig);
 
@@ -666,7 +666,7 @@ namespace jmospace {
 
         /* calculate score for theta */
 
-        gsl_vector *theta_n=gsl_vector_alloc(K_num-1);
+        gsl_vector *theta_n=gsl_vector_calloc(K_num-1);
         gsl_vector_set_zero(theta_n);
 
         for(q=p;q<u+p;q++)   
@@ -1080,11 +1080,11 @@ namespace jmospace {
     double pk,pk1,pk_1;
 
 
-    gsl_vector *Z = gsl_vector_alloc(p1),
-               *X = gsl_vector_alloc(p2),
-               *D = gsl_vector_alloc(bq),
-               *xtilde = gsl_vector_alloc(p1a),
-               *gammai = gsl_vector_alloc(p2);
+    gsl_vector *Z = gsl_vector_calloc(p1),
+               *X = gsl_vector_calloc(p2),
+               *D = gsl_vector_calloc(bq),
+               *xtilde = gsl_vector_calloc(p1a),
+               *gammai = gsl_vector_calloc(p2);
 
 
     gsl_vector_set_zero(FUNU);
@@ -1105,8 +1105,8 @@ namespace jmospace {
     int db0,db1,db2,du;
 
 
-    gsl_vector *xi = gsl_vector_alloc(point);
-    gsl_vector *wi = gsl_vector_alloc(point);
+    gsl_vector *xi = gsl_vector_calloc(point);
+    gsl_vector *wi = gsl_vector_calloc(point);
 
 
 
@@ -1118,11 +1118,11 @@ namespace jmospace {
 
 
 
-    gsl_matrix *VC=gsl_matrix_alloc(p1a+1,p1a+1);
-    gsl_vector *S=gsl_vector_alloc(p1a+1);
-    gsl_matrix *V=gsl_matrix_alloc(p1a+1,p1a+1);
-    gsl_matrix *VV=gsl_matrix_alloc(p1a+1,p1a+1);
-    gsl_vector *W=gsl_vector_alloc(p1a+1);
+    gsl_matrix *VC=gsl_matrix_calloc(p1a+1,p1a+1);
+    gsl_vector *S=gsl_vector_calloc(p1a+1);
+    gsl_matrix *V=gsl_matrix_calloc(p1a+1,p1a+1);
+    gsl_matrix *VV=gsl_matrix_calloc(p1a+1,p1a+1);
+    gsl_vector *W=gsl_vector_calloc(p1a+1);
 
 
     gsl_matrix_memcpy(VC,sig);
@@ -1144,8 +1144,8 @@ namespace jmospace {
     gsl_matrix_scale(VV,sqrt((double)2));
 
 
-    gsl_vector *ri=gsl_vector_alloc(p1a+1);
-    gsl_vector *ti=gsl_vector_alloc(p1a+1);
+    gsl_vector *ri=gsl_vector_calloc(p1a+1);
+    gsl_vector *ti=gsl_vector_calloc(p1a+1);
 
 
     m=0;    
@@ -1808,11 +1808,11 @@ namespace jmospace {
     double pk,pk1;
 
 
-    gsl_vector *Z = gsl_vector_alloc(p1),
-               *D = gsl_vector_alloc(bq),
-               *X = gsl_vector_alloc(p2),
-               *xtilde = gsl_vector_alloc(p1a),
-               *gammai = gsl_vector_alloc(p2);
+    gsl_vector *Z = gsl_vector_calloc(p1),
+               *D = gsl_vector_calloc(bq),
+               *X = gsl_vector_calloc(p2),
+               *xtilde = gsl_vector_calloc(p1a),
+               *gammai = gsl_vector_calloc(p2);
 
 
 
@@ -1820,8 +1820,8 @@ namespace jmospace {
     int db0,db1,db2,du;
 
 
-    gsl_vector *xi = gsl_vector_alloc(point);
-    gsl_vector *wi = gsl_vector_alloc(point);
+    gsl_vector *xi = gsl_vector_calloc(point);
+    gsl_vector *wi = gsl_vector_calloc(point);
 
 
 
@@ -1833,11 +1833,11 @@ namespace jmospace {
 
 
 
-    gsl_matrix *VC=gsl_matrix_alloc(p1a+1,p1a+1);
-    gsl_vector *S=gsl_vector_alloc(p1a+1);
-    gsl_matrix *V=gsl_matrix_alloc(p1a+1,p1a+1);
-    gsl_matrix *VV=gsl_matrix_alloc(p1a+1,p1a+1);
-    gsl_vector *W=gsl_vector_alloc(p1a+1);
+    gsl_matrix *VC=gsl_matrix_calloc(p1a+1,p1a+1);
+    gsl_vector *S=gsl_vector_calloc(p1a+1);
+    gsl_matrix *V=gsl_matrix_calloc(p1a+1,p1a+1);
+    gsl_matrix *VV=gsl_matrix_calloc(p1a+1,p1a+1);
+    gsl_vector *W=gsl_vector_calloc(p1a+1);
 
 
     gsl_matrix_memcpy(VC,sig);
@@ -1859,8 +1859,8 @@ namespace jmospace {
     gsl_matrix_scale(VV,sqrt((double)2));
 
 
-    gsl_vector *ri=gsl_vector_alloc(p1a+1);
-    gsl_vector *ti=gsl_vector_alloc(p1a+1);
+    gsl_vector *ri=gsl_vector_calloc(p1a+1);
+    gsl_vector *ti=gsl_vector_calloc(p1a+1);
 
     double loglik=0;
 
@@ -2213,9 +2213,9 @@ namespace jmospace {
 
    int status;
 
-   gsl_vector *temp_vector=gsl_vector_alloc(k),
-              *solution=gsl_vector_alloc(k);
-   gsl_matrix *out = gsl_matrix_alloc(k,k);
+   gsl_vector *temp_vector=gsl_vector_calloc(k),
+              *solution=gsl_vector_calloc(k);
+   gsl_matrix *out = gsl_matrix_calloc(k,k);
 
    for(i=0;i<k;i++)
    {
@@ -2473,9 +2473,9 @@ Rcpp::List jmo_cmain(int k, int n1,int p1,int p2, int p1a, int bq,int K_num, int
     
     /* allocate space for data */
 
-    gsl_matrix *C = gsl_matrix_alloc(k,p2+2);
-    gsl_matrix *Y= gsl_matrix_alloc(n1, p1+p1a+bq+1);    
-    gsl_vector *M1= gsl_vector_alloc(k);
+    gsl_matrix *C = gsl_matrix_calloc(k,p2+2);
+    gsl_matrix *Y= gsl_matrix_calloc(n1, p1+p1a+bq+1);    
+    gsl_vector *M1= gsl_vector_calloc(k);
 
 	/* read Y matrix  */
   {  			
@@ -2570,7 +2570,7 @@ Rcpp::List jmo_cmain(int k, int n1,int p1,int p2, int p1a, int bq,int K_num, int
   }
 
 
-    gsl_matrix * Cov=gsl_matrix_alloc(p1+(K_num-2)*bq+K_num+(p2+1)*g+(p1a+1)*(p1a+2)/2-2,p1+(K_num-2)*bq+K_num+(p2+1)*g+(p1a+1)*(p1a+2)/2-2);
+    gsl_matrix * Cov=gsl_matrix_calloc(p1+(K_num-2)*bq+K_num+(p2+1)*g+(p1a+1)*(p1a+2)/2-2,p1+(K_num-2)*bq+K_num+(p2+1)*g+(p1a+1)*(p1a+2)/2-2);
 
 /* switch the two competing risks (e.g., risk 1 becomes risk 2).
     for(i=0;i<k;i++)
@@ -2579,37 +2579,37 @@ Rcpp::List jmo_cmain(int k, int n1,int p1,int p2, int p1a, int bq,int K_num, int
     }
 */
     /* allocate space for estimated parameters */    
-    gsl_matrix * gamma=gsl_matrix_alloc(g, p2);                /* coefficient for covariates in competing risks*/
-    gsl_vector * vee=gsl_vector_alloc(g-1);                    /* coefficient for random effect in competing risks */
-    gsl_vector * beta=gsl_vector_alloc(p1);                    /* coefficient for longitudinal outcome  */ 
-    gsl_matrix * beta2=gsl_matrix_alloc(K_num-2,bq); 
-    gsl_vector * theta=gsl_vector_alloc(K_num-1);   
-    gsl_matrix *sig = gsl_matrix_alloc(p1a+1,p1a+1);
+    gsl_matrix * gamma=gsl_matrix_calloc(g, p2);                /* coefficient for covariates in competing risks*/
+    gsl_vector * vee=gsl_vector_calloc(g-1);                    /* coefficient for random effect in competing risks */
+    gsl_vector * beta=gsl_vector_calloc(p1);                    /* coefficient for longitudinal outcome  */ 
+    gsl_matrix * beta2=gsl_matrix_calloc(K_num-2,bq); 
+    gsl_vector * theta=gsl_vector_calloc(K_num-1);   
+    gsl_matrix *sig = gsl_matrix_calloc(p1a+1,p1a+1);
 
 
 
 
     /* allocate space for pre parameters */            
     
-    gsl_vector * prebeta=gsl_vector_alloc(p1);  
-    gsl_vector * pretheta=gsl_vector_alloc(K_num-1);   
-    gsl_matrix * prebeta2=gsl_matrix_alloc(K_num-2,bq);             
-    gsl_matrix * pregamma=gsl_matrix_alloc(g, p2);                
-    gsl_vector * prevee=gsl_vector_alloc(g-1);                                          
+    gsl_vector * prebeta=gsl_vector_calloc(p1);  
+    gsl_vector * pretheta=gsl_vector_calloc(K_num-1);   
+    gsl_matrix * prebeta2=gsl_matrix_calloc(K_num-2,bq);             
+    gsl_matrix * pregamma=gsl_matrix_calloc(g, p2);                
+    gsl_vector * prevee=gsl_vector_calloc(g-1);                                          
 
-    gsl_matrix *presig = gsl_matrix_alloc(p1a+1,p1a+1);
+    gsl_matrix *presig = gsl_matrix_calloc(p1a+1,p1a+1);
 
 
 
     /* allocate space to store parameters */            
     
-    gsl_vector * vbeta=gsl_vector_alloc(p1);  
-    gsl_vector * vbeta2=gsl_vector_alloc((K_num-2)*bq);   
-    gsl_vector * vtheta=gsl_vector_alloc(K_num-1);            
-    gsl_matrix * vgamma=gsl_matrix_alloc(g, p2);                
-    gsl_vector * vvee=gsl_vector_alloc(g-1); 
+    gsl_vector * vbeta=gsl_vector_calloc(p1);  
+    gsl_vector * vbeta2=gsl_vector_calloc((K_num-2)*bq);   
+    gsl_vector * vtheta=gsl_vector_calloc(K_num-1);            
+    gsl_matrix * vgamma=gsl_matrix_calloc(g, p2);                
+    gsl_vector * vvee=gsl_vector_calloc(g-1); 
 
-    gsl_vector *vsig = gsl_vector_alloc((p1a+1)*(p1a+2)/2);
+    gsl_vector *vsig = gsl_vector_calloc((p1a+1)*(p1a+2)/2);
 
 
 /*     FILE *output_F; 
@@ -2624,8 +2624,8 @@ Rcpp::List jmo_cmain(int k, int n1,int p1,int p2, int p1a, int bq,int K_num, int
     
 
 
-    gsl_matrix * FH01 = gsl_matrix_alloc(2,array_size);                 /* fake baseline hazard function for competing risk 1 */
-    gsl_matrix * FH02 = gsl_matrix_alloc(2,array_size);                 /* fake baseline hazard function for competing risk 2 */
+    gsl_matrix * FH01 = gsl_matrix_calloc(2,array_size);                 /* fake baseline hazard function for competing risk 1 */
+    gsl_matrix * FH02 = gsl_matrix_calloc(2,array_size);                 /* fake baseline hazard function for competing risk 2 */
     
     gsl_matrix_set_zero(FH01);
     gsl_matrix_set_zero(FH02);
@@ -2696,7 +2696,7 @@ Rcpp::List jmo_cmain(int k, int n1,int p1,int p2, int p1a, int bq,int K_num, int
     }
      
 
-    gsl_matrix * H01 = gsl_matrix_alloc(3,a);                 /* baseline hazard function for competing risk 1 */
+    gsl_matrix * H01 = gsl_matrix_calloc(3,a);                 /* baseline hazard function for competing risk 1 */
 
     for(i=0;i<3;i++)
     {
@@ -2775,7 +2775,7 @@ Rcpp::List jmo_cmain(int k, int n1,int p1,int p2, int p1a, int bq,int K_num, int
     }
 
 
-    gsl_matrix * H02 = gsl_matrix_alloc(3,b);                 /* baseline hazard function for competing risk 2 */
+    gsl_matrix * H02 = gsl_matrix_calloc(3,b);                 /* baseline hazard function for competing risk 2 */
 
     for(i=0;i<3;i++)
     {
@@ -2790,8 +2790,8 @@ Rcpp::List jmo_cmain(int k, int n1,int p1,int p2, int p1a, int bq,int K_num, int
     }
 
 
-    gsl_matrix * preH01 = gsl_matrix_alloc(3,a);               
-    gsl_matrix * preH02 = gsl_matrix_alloc(3,b);   
+    gsl_matrix * preH01 = gsl_matrix_calloc(3,a);               
+    gsl_matrix * preH02 = gsl_matrix_calloc(3,b);   
 
 
 

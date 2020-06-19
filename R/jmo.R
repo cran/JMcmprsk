@@ -35,9 +35,6 @@
 ##'  mfile=system.file("extdata", "jmosimm.txt", package = "JMcmprsk")
 ##'  res3=jmo(p=3,s=1, yfile,cfile,mfile,point=6)
 ##'  coef(res3)
-##'  anova(res3,coeff="beta")
-##'  anova(res3,coeff="gamma")
-##'  anova(res3,coeff="alpha")
 ##' #testing the function on real data with trace on
 ##'\donttest{
 ##' require(JMcmprsk)

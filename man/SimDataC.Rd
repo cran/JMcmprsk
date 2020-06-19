@@ -4,8 +4,19 @@
 \alias{SimDataC}
 \title{Data simulation of continuous outcomes and competing risks}
 \usage{
-SimDataC(k_val, p1_val, p1a_val, p2_val, g_val, truebeta, truegamma,
-  randeffect, yfn, cfn, mfn)
+SimDataC(
+  k_val,
+  p1_val,
+  p1a_val,
+  p2_val,
+  g_val,
+  truebeta,
+  truegamma,
+  randeffect,
+  yfn,
+  cfn,
+  mfn
+)
 }
 \arguments{
 \item{k_val}{The number of subjects in study.}

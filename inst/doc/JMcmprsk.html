@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
-<meta name="date" content="2020-02-22" />
+<meta name="date" content="2020-06-18" />
 
 <title>Joint Models for Longitudinal Measurements and Competing Risks Failure Time Data</title>
 
@@ -19,9 +19,9 @@
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -31,14 +31,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -47,9 +49,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -95,7 +97,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -116,9 +118,6 @@ padding-right: 2em;
 font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 font-size: 14px;
 line-height: 1.35;
-}
-#header {
-text-align: center;
 }
 #TOC {
 clear: both;
@@ -287,7 +286,8 @@ code > span.st { color: #d14; }
 code > span.co { color: #888888; font-style: italic; } 
 code > span.ot { color: #007020; } 
 code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
 
 
@@ -301,7 +301,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 
 <h1 class="title toc-ignore">Joint Models for Longitudinal Measurements and Competing Risks Failure Time Data</h1>
-<h4 class="date">2020-02-22</h4>
+<h4 class="date">2020-06-18</h4>
 
 
 
@@ -353,19 +353,19 @@ P(Y_{ij}\leq k|X_{ij},\tilde X_{ij},W_{ij},b_i)=\frac{1}{1+\exp(-\theta_{k}-X_{i
 <div id="examples" class="section level2">
 <h2>Examples</h2>
 <p>We first load the package and the data.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">set.seed</span>(<span class="dv">123</span>)</a>
-<a class="sourceLine" id="cb1-2" title="2"><span class="kw">require</span>(JMcmprsk)</a>
-<a class="sourceLine" id="cb1-3" title="3">yfile=<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;fvc621_y.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;JMcmprsk&quot;</span>)</a>
-<a class="sourceLine" id="cb1-4" title="4">cfile=<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;fvc621_c.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;JMcmprsk&quot;</span>)</a>
-<a class="sourceLine" id="cb1-5" title="5">mfile=<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;fvc621_m.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;JMcmprsk&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">require</span>(JMcmprsk)</span>
+<span id="cb1-3"><a href="#cb1-3"></a>yfile=<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;fvc621_y.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;JMcmprsk&quot;</span>)</span>
+<span id="cb1-4"><a href="#cb1-4"></a>cfile=<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;fvc621_c.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;JMcmprsk&quot;</span>)</span>
+<span id="cb1-5"><a href="#cb1-5"></a>mfile=<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;fvc621_m.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;JMcmprsk&quot;</span>)</span></code></pre></div>
 <p>The number of rows in yfile is the total number of measurements for all subjects in the study. The columns in yfile should start with the longitudinal outcome (column 1), the covariates for the random effects, and then the covariates for the fixed effects. For cfile, the survival / censoring time is included in the first column, and the failure type coded as 0 (censored events), 1 (risk 1), or 2 (risk 2) is given in the second column. Two competing risks are assumed. The covariates are included in the third column and on. mfile is to indicate the number of longitudinal measurements per subject. The number of rows equals to the number of subjects.</p>
 <p>Hence, the model can be specified by the function jmc():</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">jmcfit =<span class="st"> </span><span class="kw">jmc</span>(<span class="dt">p=</span><span class="dv">7</span>,yfile,cfile,mfile,<span class="dt">point=</span><span class="dv">20</span>,<span class="dt">do.trace =</span> F)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>jmcfit =<span class="st"> </span><span class="kw">jmc</span>(<span class="dt">p=</span><span class="dv">7</span>,yfile,cfile,mfile,<span class="dt">point=</span><span class="dv">20</span>,<span class="dt">do.trace =</span> F)</span></code></pre></div>
 <p>with <span class="math inline">\(p\)</span> the dimension of fixed effects (include intercept) in yfile, the option “point” is the number of points used to approximate the integral in the E-step, default is 20, and “do.trace” is used to control whether the programm prints the iteration details. If we would like to see a concise summary of the result we can simply type</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="co">#because of the long running time, we save the jmo and jmc results within the package</span></a>
-<a class="sourceLine" id="cb3-2" title="2">fitfile=<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;runfit.RData&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;JMcmprsk&quot;</span>)</a>
-<a class="sourceLine" id="cb3-3" title="3"><span class="kw">load</span>(fitfile)</a>
-<a class="sourceLine" id="cb3-4" title="4">jmcfit</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co">#because of the long running time, we save the jmo and jmc results within the package</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>fitfile=<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;runfit.RData&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;JMcmprsk&quot;</span>)</span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="kw">load</span>(fitfile)</span>
+<span id="cb3-4"><a href="#cb3-4"></a>jmcfit</span></code></pre></div>
 <pre><code>## Model Type:                             jmc 
 ## 
 ##                   Estimate   Std. Error       95% CI                Pr(&gt;|Z|)    
@@ -400,16 +400,16 @@ P(Y_{ij}\leq k|X_{ij},\tilde X_{ij},W_{ij},b_i)=\frac{1}{1+\exp(-\theta_{k}-X_{i
 ##   sigma_b1u      -0.0997       0.0797      (-0.2560, 0.0565)      0.2109131</code></pre>
 <p>The resulting table contains three parts, the fixed effects in longitudinal model, survival model and random effects. It gives the estimated parameters in the first column, standard error in the second column, 95% confidence interval and <span class="math inline">\(p\)</span>-value for these parameters in the third and forth columns. In our example, there is only one random effect, if there are more than one random effect, the outputs will include <span class="math inline">\(sigma_b11, sigma_b12, sigma_b22, sigma_b1u, sigma_b2u\)</span> and so on.</p>
 <p>By the way, the supporting function coef() can be used to extract the coefficients of the longitudinal process:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">coef</span>(jmcfit)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">coef</span>(jmcfit)</span></code></pre></div>
 <pre><code>##   intercept      time.1        FVC0        FIB0         CYC    FVC0.CYC 
 ## 66.04146267 -0.06164756  0.90166283 -1.77799172  0.01503104  0.13798885 
 ##    FIB0.CYC    time.CYC 
 ##  1.70883750  0.12776670</code></pre>
 <p>We proceed by checking the fit of the model using Wald test.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="kw">anova</span>(jmcfit,<span class="dt">coeff=</span><span class="st">&quot;beta&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">anova</span>(jmcfit,<span class="dt">coeff=</span><span class="st">&quot;beta&quot;</span>)</span></code></pre></div>
 <pre><code>##         Chisq df    Pr(&gt;|Chi|)
 ## beta 1067.165  7 3.684936e-226</code></pre>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw">anova</span>(jmcfit,<span class="dt">coeff=</span><span class="st">&quot;gamma&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">anova</span>(jmcfit,<span class="dt">coeff=</span><span class="st">&quot;gamma&quot;</span>)</span></code></pre></div>
 <pre><code>##           Chisq df Pr(&gt;|Chi|)
 ## gamma1 1.519491  5  0.9108096
 ## gamma2 9.162137  5  0.1027692</code></pre>
@@ -428,18 +428,18 @@ P(Y_{ij}\leq k)&amp;=&amp;[1+\exp(-\theta_{k}-(\beta_1Group+\beta_2\mbox{Modifie
 &amp;&amp;+\gamma_{25} \mbox{Small vessel*group}+\gamma_{26}\mbox{Large vessel or cardioembolic stroke*group}+\nu_2u_i),
 \end{eqnarray*}\]</span></p>
 <p>We first load the package and the data.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="kw">set.seed</span>(<span class="dv">123</span>)</a>
-<a class="sourceLine" id="cb11-2" title="2"><span class="kw">require</span>(JMcmprsk)</a>
-<a class="sourceLine" id="cb11-3" title="3">yfile=<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;ninds_nrank_y.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;JMcmprsk&quot;</span>)</a>
-<a class="sourceLine" id="cb11-4" title="4">cfile=<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;ninds_nrank_c.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;JMcmprsk&quot;</span>)</a>
-<a class="sourceLine" id="cb11-5" title="5">mfile=<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;ninds_nrank_m.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;JMcmprsk&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="kw">require</span>(JMcmprsk)</span>
+<span id="cb11-3"><a href="#cb11-3"></a>yfile=<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;ninds_nrank_y.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;JMcmprsk&quot;</span>)</span>
+<span id="cb11-4"><a href="#cb11-4"></a>cfile=<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;ninds_nrank_c.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;JMcmprsk&quot;</span>)</span>
+<span id="cb11-5"><a href="#cb11-5"></a>mfile=<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;ninds_nrank_m.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;JMcmprsk&quot;</span>)</span></code></pre></div>
 <p>In particular, we put the non-proportional odds covariates in front of the proportional odds covariates in yfile, and the other arrangements are the same with those in jmc().</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">jmofit =<span class="st"> </span><span class="kw">jmo</span>(<span class="dt">p=</span><span class="dv">9</span>,<span class="dt">s=</span><span class="dv">2</span>, yfile,cfile,mfile,<span class="dt">point=</span><span class="dv">20</span>,<span class="dt">do.trace =</span> F)</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>jmofit =<span class="st"> </span><span class="kw">jmo</span>(<span class="dt">p=</span><span class="dv">9</span>,<span class="dt">s=</span><span class="dv">2</span>, yfile,cfile,mfile,<span class="dt">point=</span><span class="dv">20</span>,<span class="dt">do.trace =</span> F)</span></code></pre></div>
 <p>with <span class="math inline">\(p\)</span> the dimension of proportional odds covariates (not including intercept) in yfile and <span class="math inline">\(s\)</span> the dimension of non-proportional odds covariates in yfile. If we would like to see a concise summary of the result we can simply type</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="co">#because of the long running time, we save the jmo and jmc results within the package</span></a>
-<a class="sourceLine" id="cb13-2" title="2">fitfile=<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;runfit.RData&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;JMcmprsk&quot;</span>)</a>
-<a class="sourceLine" id="cb13-3" title="3"><span class="kw">load</span>(fitfile)</a>
-<a class="sourceLine" id="cb13-4" title="4">jmofit</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="co">#because of the long running time, we save the jmo and jmc results within the package</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a>fitfile=<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;runfit.RData&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;JMcmprsk&quot;</span>)</span>
+<span id="cb13-3"><a href="#cb13-3"></a><span class="kw">load</span>(fitfile)</span>
+<span id="cb13-4"><a href="#cb13-4"></a>jmofit</span></code></pre></div>
 <pre><code>## Model Type:                             jmo 
 ## 
 ##                   Estimate   Std. Error       95% CI                Pr(&gt;|Z|)    
@@ -501,6 +501,9 @@ P(Y_{ij}\leq k)&amp;=&amp;[1+\exp(-\theta_{k}-(\beta_1Group+\beta_2\mbox{Modifie
 </div>
 </div>
 
+
+
+<!-- code folding -->
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
