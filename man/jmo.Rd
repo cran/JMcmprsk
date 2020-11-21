@@ -2,94 +2,111 @@
 % Please edit documentation in R/jmo.R
 \name{jmo}
 \alias{jmo}
-\title{Joint Modelling for Ordinal outcomes}
+\title{An integrated function for reconstructing data and do the joint modelling}
 \usage{
 jmo(
-  p,
-  s,
-  yfile,
-  cfile,
-  mfile,
-  point = 20,
-  maxiterations = 1e+05,
-  do.trace = FALSE,
-  type_file = TRUE
+  long_data,
+  surv_data,
+  out,
+  FE,
+  RE,
+  NP,
+  ID,
+  cate = NULL,
+  intcpt = 1,
+  quad.points = 20,
+  max.iter = 10000,
+  quiet = TRUE,
+  do.trace = FALSE
 )
 }
 \arguments{
-\item{p}{The dimension of proportional odds covariates (not including intercept) in yfile.}
+\item{long_data}{Data matrix for longitudinal in long format. The time variable should be labeled 'time'.}
 
-\item{s}{The dimension of non-proportional odds covariates in yfile.}
+\item{surv_data}{Data matrix for competing risks data. Each subject has one row of observation (as opposed to the long_data).
+First and second column should be the observed event time and censoring indicator, respectively. 
+The coding for the censoring indicator is as follows: 0 - censored events, 1 - risk 1, 2 - risk 2. Two competing risks are assumed.}
 
-\item{yfile}{Y matrix for longitudinal measurements in long format. For example, for a subject with n measurements, there are n rows for this subject. The # of rows in y matrix is the total number of measurements for all subjects. The columns in Y are ordered this way: the longitudinal outcome (column 1), then the covariates for random effects, and lastly, the covariates for fixed effects (no intercept).}
+\item{out}{Column name for outcome variable in long_data.}
 
-\item{cfile}{C matrix for competing risks failure time data. Each subject has one data entry, so the number of rows equals to the number of subjects. The survival / censoring time is included in the first column, and the failure type coded as 0 (censored events), 1 (risk 1), or 2 (risk 2) is given in the second column. Two competing risks are assumed. The covariates are included in the third column and on.}
+\item{FE}{Vector of column names that correspond to the fixed effects in long_data. If missing, then all columns except for the outcome and ID columns will be considered.}
 
-\item{mfile}{M vector to indicate the number of longitudinal measurements per subject. The number of rows equals to the number of subjects.}
+\item{RE}{Types/Vector of random effects in long_data. The available type are "intercept", "linear", "quadratic" (time-related random effect specification) or other covariates in the input dataset.}
 
-\item{point}{Quadrature points used in the EM procedure. Default is 20.}
+\item{NP}{Vector of column names that correspond to the non-proportional odds covariates. It won't run the model if NP is not specified.}
 
-\item{maxiterations}{Maximum values of iterations. Default is 100000.}
+\item{ID}{Column name for subject ID number in long_data.}
 
-\item{do.trace}{Print detailed information of each iteration. Default is false, not to print the iteration details.}
+\item{cate}{Vector of categorical variables in long_data.}
 
-\item{type_file}{Types of inputs. Default is true, i.e.  data files with headers. If set to "F", inputs are changed to data matrixes or data.frames (with headers)}
+\item{intcpt}{Specify either 0 or 1. Default is set as 1. 0 means no intercept in random effect.}
+
+\item{quad.points}{Number of quadrature points used in the EM procedure. Default is 20. Must be an even number. Larger values means higher accuracy but more time-consuming.}
+
+\item{max.iter}{Max iterations. Default is 10000.}
+
+\item{quiet}{Logical. Print progress of function. Default is TRUE.}
+
+\item{do.trace}{Logical. Print the parameter estimates during the iterations. Default is FALSE.}
 }
 \value{
 Object of class \code{JMcmprsk} with elements
   \tabular{ll}{
-      \code{vcmatrix}    \tab  The variance-covariance matrix for all the parameters. The parameters are in the order: \eqn{\beta}, \eqn{\alpha}, \eqn{\theta}, \eqn{\gamma}, \eqn{\nu}, and \eqn{\Sigma}. The elements in \eqn{\Sigma} are output in the order along the main diagonal line, then the second main diagonal line, and so on. \cr
+      \code{vcmatrix}    \tab  The variance-covariance matrix for all the parameters. The parameters are in the order: \eqn{\beta}, \eqn{\sigma^2}, \eqn{\gamma}, \eqn{\nu}, and \eqn{\Sigma}. The elements in \eqn{\Sigma} are output in the order along the main diagonal line, then the second main diagonal line, and so on. \cr
       \code{betas} \tab The point  estimates of \eqn{\beta}. \cr
       \code{se_betas} \tab The standard error estimate of \eqn{\beta}. \cr
-      \code{alphamatrix} \tab The point  estimates of \eqn{\alpha}. \cr
-      \code{se_alphas} \tab The standard error estimate of \eqn{\alpha}. \cr
-      \code{theta} \tab The point  estimates of \eqn{\theta}. \cr 
-      \code{se_theta} \tab The standard error estimate of \eqn{\theta}. \cr
       \code{gamma_matrix} \tab  The point  estimate of \eqn{\gamma}. \cr
       \code{se_gamma_matrix}   \tab  The standard error estimate of \eqn{\gamma}. \cr
       \code{v_estimate} \tab The point  estimate of \eqn{\nu}. \cr
       \code{se_v_estimate}    \tab The standard error estimate of \eqn{\nu}. \cr
+      \code{sigma2_val}     \tab  The point estimate of \eqn{\sigma^2}.\cr
+      \code{se_sigma2_val}     \tab  The standard error estimate of \eqn{\sigma^2}.\cr
       \code{sigma_matrix}     \tab The point estimate of \eqn{\Sigma} (only the upper triangle portion of the matrix is output).\cr
       \code{se_sigma}     \tab The standard error estimate of \eqn{\Sigma}.The standard errors are given in this order: main diagonal, the second main diagonal, and so on. \cr
       \code{loglike}     \tab Log Likelihood.\cr
   }
 }
 \description{
-Joint modeling of longitudinal ordinal data and competing risks
+Reconstruct data into a regular longitudinal format as a refined dataset and do joint modelling for this refined data with ordinal outcome.
 }
 \examples{
-# A toy example on simulated data
- require(JMcmprsk)
- set.seed(123)
- yfile=system.file("extdata", "jmosimy.txt", package = "JMcmprsk")
- cfile=system.file("extdata", "jmosimc.txt", package = "JMcmprsk")
- mfile=system.file("extdata", "jmosimm.txt", package = "JMcmprsk")
- res3=jmo(p=3,s=1, yfile,cfile,mfile,point=6)
- coef(res3)
-#testing the function on real data with trace on
-\donttest{
-require(JMcmprsk)
-set.seed(123)
-yfile=system.file("extdata", "ninds_nrank_y.txt", package = "JMcmprsk")
-cfile=system.file("extdata", "ninds_nrank_c.txt", package = "JMcmprsk")
-mfile=system.file("extdata", "ninds_nrank_m.txt", package = "JMcmprsk")
-res=jmo(p=9,s=2, yfile,cfile,mfile,point=6,do.trace = TRUE)
-#if the input are not files but matrixes or data.frames,i.e. type_file=F
-ydata=read.table(yfile,header = T)
-cdata=read.table(cfile,header = T)
-mdata=read.table(mfile)
-res=jmo(p=9,s=2, ydata,cdata,mdata,point=6,do.trace = TRUE,type_file = F)
-coef(res)
-anova(res,coeff="beta")
-anova(res,coeff="gamma")
-anova(res,coeff="alpha")
-}
-}
-\references{
-\itemize{
-\item Ning Li,Robert M. Elashoff,Gang Li and Jeffrey Saver. "Joint modeling of longitudinal ordinal data and competing risks survival times and analysis of the NINDS rt-PA stroke trial." Statistics in medicine 29.5 (2010): 546-557.
-}
+  require(JMcmprsk)
+  set.seed(123)
+  data(ninds)
+  yread <- ninds[, c(1, 2:14)]
+  cread <- ninds[, c(1, 15, 16, 6, 10:14)]
+  cread <- unique(cread)
+  \donttest{
+  res1 <- jmo(yread, cread, out = "Y",
+              FE = c("group", "time3", "time6", "time12", "mrkprior",
+                     "smlves", "lvORcs", "smlves.group", "lvORcs.group"),
+              cate = NULL,RE = "intercept", NP = c("smlves", "lvORcs"), 
+              ID = "ID",intcpt = 1, quad.points = 6, 
+              max.iter = 1000, quiet = FALSE, do.trace = FALSE)
+   res1
+  }
+ 
+  \dontrun{
+  #Create two categorical variables and add them into yread              
+  ID <- cread$ID
+  set.seed(100)
+  sex <- sample(c("Female", "Male"), nrow(cread), replace = T)
+  race <- sample(c("White", "Black", "Asian", "Hispanic"), nrow(cread), replace = T)
+  cate_var <- data.frame(ID, sex, race)
+  if (require(dplyr)) {
+    yread <- dplyr::left_join(yread, cate_var, by = "ID")
+      }
+  
+  res2 <- jmo(yread, cread, out = "Y",
+              FE = c("group", "time3", "time6", "time12", "mrkprior",
+                     "smlves", "lvORcs", "smlves.group", "lvORcs.group"), cate = c("race", "sex"),
+              RE = "intercept", NP = c("smlves", "lvORcs", "race", "sex"), ID = "ID",intcpt = 1,
+              quad.points = 20, max.iter = 10000, quiet = FALSE, do.trace = FALSE)
+  res2
+  }
+  
+  
 }
 \seealso{
-\code{\link{jmc}}
+\code{\link{jmo_0}}
 }

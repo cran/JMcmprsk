@@ -1741,8 +1741,8 @@ Rcpp::List jmc_cmain(int k, int n1,int p1,int p2, int maxl, int p1a, int maxiter
   NumericMatrix sd_gamma_matrix(g,p2);
   NumericVector v_estimate(g-1);
   NumericVector sd_v_estimate(g-1);
-  double sigma2_val=0.0;
-  double se_sigma2_val=0.0;
+  double sigma2_val;
+  double se_sigma2_val;
   NumericMatrix sigma_matrix(p1a+1,p1a+1);
   NumericVector sd_sigma((p1a+1)*(p1a+2)/2);
   double loglike=0.0;

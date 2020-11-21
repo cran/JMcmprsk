@@ -45,7 +45,7 @@ jmo_main <- function(k, n1, p1, p2, p1a, bq, K_num, j_max, point, xs, ws, betas,
 #' SimDataC(k_val, p1_val, p1a_val, p2_val, g_val,truebeta, 
 #'          truegamma, randeffect, yfn,  cfn,  mfn)
 #' \donttest{
-#' jmc(p=4,yfn,cfn,mfn,point=6)
+#' jmc_0(p=4,yfn,cfn,mfn,point=6)
 #'}
 #' @references
 #' \itemize{
@@ -94,7 +94,7 @@ SimDataC <- function(k_val, p1_val, p1a_val, p2_val, g_val, truebeta, truegamma,
 #' SimDataO(k_val, p1_val, p1a_val, p2_val, g_val,
 #'       truebeta, truetheta, truegamma, randeffect, yfn,  cfn,  mfn)
 #' \donttest{
-#' jmo(p=3,s=1, yfn,cfn,mfn,point=10,do.trace = TRUE)
+#' jmo_0(p=3,s=1, yfn,cfn,mfn,point=10,do.trace = TRUE)
 #'}
 #' @references
 #' \itemize{

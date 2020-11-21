@@ -2,35 +2,49 @@
 % Please edit documentation in R/jmc.R
 \name{jmc}
 \alias{jmc}
-\title{Joint Modelling for Continuous outcomes}
+\title{An integrated function for reconstructing data and do the joint modelling}
 \usage{
 jmc(
-  p,
-  yfile,
-  cfile,
-  mfile,
-  point = 20,
-  maxiterations = 1e+05,
-  do.trace = FALSE,
-  type_file = TRUE
+  long_data,
+  surv_data,
+  out,
+  FE,
+  RE,
+  ID,
+  cate = NULL,
+  intcpt = 1,
+  quad.points = 10,
+  max.iter = 10000,
+  quiet = TRUE,
+  do.trace = FALSE
 )
 }
 \arguments{
-\item{p}{The dimension of fixed effects (not including intercept) in yfile.}
+\item{long_data}{Data matrix for longitudinal in long form. The time variable should be labeled 'time'.}
 
-\item{yfile}{Y matrix for longitudinal measurements in long format. For example, for a subject with n measurements, there should be n rows for this subject. The # of rows in y matrix is the total number of measurements for all subjects in the study. The columns in Y should start with the longitudinal outcome (column 1), the covariates for the random effects, and then the covariates for the fixed effects.}
+\item{surv_data}{Data matrix for competing risks data. Each subject has one row of observation (as opposed to the long_data).
+First and second column should be the observed event time and censoring indicator, respectively. 
+The coding for the censoring indicator is as follows: 0 - censored events, 1 - risk 1, 2 - risk 2. Two competing risks are assumed.}
 
-\item{cfile}{C matrix for competing risks failure time data. Each subject has one data entry, so the number of rows equals to the number of subjects. The survival / censoring time is included in the first column, and the failure type coded as 0 (censored events), 1 (risk 1), or 2 (risk 2) is given in the second column. Two competing risks are assumed. The covariates are included in the third column and on.}
+\item{out}{Column name for outcome variable in long_data.}
 
-\item{mfile}{M vector to indicate the number of longitudinal measurements per subject. The number of rows equals to the number of subjects.}
+\item{FE}{Vector of column names that correspond to the fixed effects in long_data. If missing, then all columns except for the outcome and ID columns will be considered.}
 
-\item{point}{Quadrature points used in the EM procedure.Default is 20.}
+\item{RE}{Types/Vector of random effects in long_data. The available type are "intercept", "linear", "quadratic" (time-related random effect specification) or other covariates in the input dataset. If specify other covariates, then they to be numerical vectors.}
 
-\item{maxiterations}{Maximum values of iterations. Default is 100000.}
+\item{ID}{Column name for subject ID number in long_data.}
 
-\item{do.trace}{Print detailed information of each iteration. Default is false, i.e., not to print the iteration details.}
+\item{cate}{Vector of categorical variables in long_data. Default is NULL.}
 
-\item{type_file}{Types of inputs. Default is true, i.e.  data files with headers. If set to "F", inputs are changed to data matrixes or data.frames (with headers)}
+\item{intcpt}{Specify either 0 or 1. Default is set as 1. 0 means no intercept in random effect.}
+
+\item{quad.points}{Number of quadrature points used in the EM procedure. Default is 20. Must be an even number. Larger values means higher accuracy but more time-consuming.}
+
+\item{max.iter}{Max iterations. Default is 10000.}
+
+\item{quiet}{Logical. Print progress of function. Default is TRUE.}
+
+\item{do.trace}{Logical. Print the parameter estimates during the iterations. Default is FALSE.}
 }
 \value{
 Object of class \code{JMcmprsk} with elements
@@ -50,40 +64,66 @@ Object of class \code{JMcmprsk} with elements
   }
 }
 \description{
-Joint modeling of longitudinal continuous data and competing risks
+Reconstruct data into a regular longitudinal format as a refined dataset and do joint modelling for this refined data with continuous outcome.
 }
 \examples{
-# A toy example on simulated data
+
 require(JMcmprsk)
 set.seed(123)
-yfile=system.file("extdata", "jmcsimy.txt", package = "JMcmprsk")
-cfile=system.file("extdata", "jmcsimc.txt", package = "JMcmprsk")
-mfile=system.file("extdata", "jmcsimm.txt", package = "JMcmprsk")
-res2=jmc(p=4,yfile,cfile,mfile,point=6)
-coef(res2)
-#testing the function on real data with trace on
+data(lung)
+yread <- lung[, c(1,2:11)]
+cread <- unique(lung[, c(1, 12, 13, 6:10)])
 \donttest{
-require(JMcmprsk)
-set.seed(123)
-yfile=system.file("extdata", "fvc621_y.txt", package = "JMcmprsk")
-cfile=system.file("extdata", "fvc621_c.txt", package = "JMcmprsk")
-mfile=system.file("extdata", "fvc621_m.txt", package = "JMcmprsk")
-res1=jmc(p=7,yfile,cfile,mfile,do.trace = TRUE)
-#if the input are not files but matrixes or data.frames,i.e. type_file=F
- ydata=read.table(yfile,header = T)
- cdata=read.table(cfile,header = T)
- mdata=read.table(mfile)
- res1=jmc(p=7,ydata,cdata,mdata, do.trace = TRUE,type_file = F)
-coef(res1) 
-anova(res1,coeff="beta") 
-anova(res1,coeff="gamma")   
-} 
+res <- jmc(long_data = yread, surv_data = cread, out = "FVC", 
+           FE = c("time", "FVC0", "FIB0", "CYC", "FVC0.CYC", 
+                  "FIB0.CYC", "time.CYC"), 
+           RE = "linear", ID = "ID",cate = NULL, intcpt = 0, 
+           quad.points = 8, quiet = FALSE)
 }
-\references{
-\itemize{
-\item Elashoff, Robert M., Gang Li, and Ning Li. "A joint model for longitudinal measurements and survival data in the presence of multiple failure types." Biometrics 64.3 (2008): 762-771.
+
+#make up two categorical variables and add them into yread
+sex <- sample(c("Female", "Male"), nrow(cread), replace = TRUE)
+race <- sample(c("White", "Black", "Asian", "Hispanic"),
+               nrow(cread), replace = TRUE)
+ID <- cread$ID
+cate_var <- data.frame(ID, sex, race)
+if (require(dplyr)) {
+  yread <- dplyr::left_join(yread, cate_var, by = "ID") 
 }
+\donttest{
+# run jmc function again for yread file with two added categorical variables
+res2 <- jmc(long_data = yread, surv_data = cread,
+            out = "FVC", cate = c("sex", "race"),
+            FE = c("time", "FVC0", "FIB0", "CYC", "FVC0.CYC",
+                "FIB0.CYC", "time.CYC"),
+            RE = "time", ID = "ID", intcpt = 0,
+            quad.points = 8, quiet = FALSE)
+res2
+# Extract the parameter estimates of longitudinal sub-model fixed effects
+ beta <- coef(res2, coeff = "beta")
+ beta
+## Linear hypothesis of testing all coefficients of beta's equal 0
+ linearTest(res2, coeff="beta")
+ ## Linear hypothesis of testing beta1=beta2
+ ## create a linear contrast for beta1=beta2 (intercept not included in Lb)
+ Lb <- matrix(c(1, -1, 0, 0, 0, 0, 0), ncol = length(beta)-1, nrow = 1)
+ linearTest(res2, coeff="beta", Lb = Lb)
+ # Extract the parameter estimates of survival sub-model fixed effects
+ gamma <- coef(res2, coeff = "gamma")
+ gamma
+ ## Linear hypothesis of testing all coefficients of gamma's equal 0
+ linearTest(res2, coeff="gamma")
+ ## Linear hypothesis of testing gamma11=gamma21 
+ ##  (the coefficients of first covariate from 
+ ##    both risk functions are equal)
+ Lg <- matrix(c(1, 0, 0, 0, 0, -1, 0, 0, 0, 0), ncol = length(gamma), nrow = 1)
+ linearTest(res2, coeff="gamma", Lg = Lg)
+ ## Extract the standard errors for the longitudinal portion
+ summary(res2, coeff = "longitudinal", digits = 4)
+ ## Extract the standard errors for the survival portion
+ summary(res2, coeff = "survival", digits = 4)
+ }
 }
 \seealso{
-\code{\link{jmo}}
+\code{\link{jmc_0}}
 }

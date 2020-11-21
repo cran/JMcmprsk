@@ -3204,7 +3204,8 @@ Rcpp::List jmo_cmain(int k, int n1,int p1,int p2, int p1a, int bq,int K_num, int
   ret["se_v_estimate"] = sd_v_estimate;   
   ret["sigma_matrix"] = sigma_matrix;  
   ret["se_sigma"] = sd_sigma; 
-  ret["loglike"] = loglike;   
+  ret["loglike"] = loglike;
+  ret["Nlevels"] = K_num;
 
    return ret;
 

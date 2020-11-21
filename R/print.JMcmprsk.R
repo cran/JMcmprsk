@@ -3,18 +3,36 @@
 ##'
 ##' @title Print JMcmprsk
 ##' @param x Object of class 'JMcmprsk'.
+##' @param digits  The desired number of digits after the decimal point. Default is 4.
 ##' @param ... Further arguments passed to or from other methods.
 ##' @seealso \code{\link{jmc}}
 ##' @author Hong Wang
 ##' @export
-print.JMcmprsk <- function(x, ...) {
+print.JMcmprsk <- function(x,digits=4, ...) {
   if (!inherits(x, "JMcmprsk")) 
     stop("Not a legitimate \"JMcmprsk\" object")
-  
-  cat("Model Type:                            ", x$type, "\n\n")
-  
+  cat("\nCall:\n", sprintf(format(paste(deparse(x$call, width.cutoff = 500), collapse=""))), "\n\n")
   if (x$type == "jmc") {
-    cat("                  Estimate   Std. Error       95% CI                Pr(>|Z|)    \n")
+    
+    ##need to add function call (Hong)
+    cat("Data Summary:\n")
+    cat("Number of observations:", x$SummaryInfo$Numobs, "\n")
+    cat("Number of groups:", x$k, "\n\n")
+    cat("Proportion of competing risks: \n")
+    for (i in 1:2) {
+      cat("Risk", i, ":", x$SummaryInfo$PropComp[i+1], "%\n")
+    }
+    cat("\nNumerical intergration:\n")
+    cat("Method: standard Guass-Hermite quadrature\n")
+    cat("Number of quadrature points: ", x$point, "\n")
+    cat("\nModel Type: joint modeling of longitudinal continuous and competing risks data", "\n\n")
+    cat("Model summary:\n")
+    cat("Longitudinal process: linear mixed effects model\n")
+    cat("Event process: cause-specific Cox proportional hazard model with unspecified baseline hazard\n\n")
+    cat("Loglikelihood: ", x$loglike, "\n\n")
+    cat("Longitudinal sub-model fixed effects: ", 
+        sprintf(format(paste(deparse(x$SummaryInfo$LongitudinalSubmodel, width.cutoff = 500), collapse=""))), "\n")
+    cat("\n                  Estimate   Std. Error       95% CI            Pr(>|Z|)    \n")
     cat("Longitudinal:                \n")
     cat(" Fixed effects:                 \n")
     
@@ -25,13 +43,17 @@ print.JMcmprsk <- function(x, ...) {
       lowersd = x$betas[i] - 1.96 * x$se_betas[i]
       zval = (x$betas[i]/x$se_betas[i])
       pval = 2 * pnorm(-abs(zval))
-	  cat(" ",formatC(beta,width=14,flag="-"), sprintf("% 1.4f", x$betas[i]))	  
-      cat("     ", sprintf("% 1.4f", x$se_betas[i]))
-      cat("     ", sprintf("(% 1.4f,% 1.4f)", lowersd, uppsd))
-      cat("     ", pval)
+	 
+	  
+	  cat(" ",formatC(beta,width=14,flag="-"),  formatC(x$betas[i], digits = digits, width=10,format = "f",flag="-"))	  
+	 
+      cat("  ",  formatC(x$se_betas[i], digits = digits, width=10, format = "f",flag="-"))
+	  
+      cat("  (", formatC(lowersd, digits = digits, format = "f",flag=" ") ,",",formatC(uppsd, digits = digits, format = "f",flag=" "),")", sep = "")
+      cat("     ", formatC(pval, digits = digits, width=10,format = "f",flag="-"))
       cat("\n")
     }
-    
+    cat("Random effects:                 \n")
     cat(" ",formatC("sigma^2",width=14,flag="-"), sprintf("% 1.4f", x$sigma2_val))
     cat("     ", sprintf("% 1.4f", x$se_sigma2_val))
     
@@ -39,12 +61,14 @@ print.JMcmprsk <- function(x, ...) {
     lowersd = x$sigma2_val - 1.96 * x$se_sigma2_val
     zval = (x$sigma2_val/x$se_sigma2_val)
     pval = 2 * pnorm(-abs(zval))
-    cat("     ", sprintf("(% 1.4f,% 1.4f)", lowersd, uppsd))
-    cat("    ", pval)
+    cat("  (", formatC(lowersd, digits = digits, format = "f",flag=" ") ,",",formatC(uppsd, digits = digits, format = "f",flag=" "),")", sep = "")
+    cat("     ", formatC(pval, digits = digits, width=10,format = "f",flag="-"))
     cat("\n")  
         
     
-    # cat(' Estimate Std. Error 95%CI Pr(>|Z|) \n')
+    cat("\nSurvival sub-model fixed effects: ", 
+        sprintf(format(paste(deparse(x$SummaryInfo$SurvivalSubmodel, width.cutoff = 500), collapse=""))), "\n")
+    cat("\n                  Estimate   Std. Error       95% CI           Pr(>|Z|)    \n")
     cat("Survival:                \n")
     cat(" Fixed effects:                 \n")
     for (i in 1:dim(x$gamma_matrix)[1]) for (j in 1:dim(x$gamma_matrix)[2]) {
@@ -57,22 +81,23 @@ print.JMcmprsk <- function(x, ...) {
       lowersd = gammaval - 1.96 * stdgammaval
       zval = (gammaval/stdgammaval)
       pval = 2 * pnorm(-abs(zval))
-      cat(" ",formatC(gamma,width=14,flag="-"), sprintf("% 1.4f", gammaval))
-      cat("     ", sprintf("% 1.4f", stdgammaval))
-      cat("     ", sprintf("(% 1.4f,% 1.4f)", lowersd, uppsd))
-      cat("     ", pval)
+      cat(" ",formatC(gamma,width=14,flag="-"),formatC(gammaval, digits = digits, width=10, format = "f",flag="-"))
+	  
+      cat("  ",  formatC(stdgammaval, digits = digits, width=10, format = "f",flag="-"))	  
+      cat("  (", formatC(lowersd, digits = digits, format = "f",flag=" ") ,",",formatC(uppsd, digits = digits, format = "f",flag=" "),")", sep = "")
+      cat("     ", formatC(pval, digits = digits, width=10,format = "f",flag="-"))
       cat("\n")
     }
-    cat("Random effects:                 \n")
-	cat(" ",formatC("v2",width=14,flag="-"), sprintf("% 1.4f", x$v_estimate))
-    cat("     ", sprintf("% 1.4f", x$se_v_estimate))
-    
+    cat("\nAssociation parameter:                 \n")
+	cat(" ",formatC("v2",width=14,flag="-"), formatC(x$v_estimate, digits = digits, width=10, format = "f",flag="-"))
+	cat("  ",  formatC(x$se_v_estimate, digits = digits, width=10, format = "f",flag="-"))
+	      
     uppsd = x$v_estimate + 1.96 * x$se_v_estimate
     lowersd = x$v_estimate - 1.96 * x$se_v_estimate
     zval = (x$v_estimate/x$se_v_estimate)
     pval = 2 * pnorm(-abs(zval))
-    cat("     ", sprintf("(% 1.4f,% 1.4f)", lowersd, uppsd))
-    cat("     ", pval)
+    cat("  (", formatC(lowersd, digits = digits, format = "f",flag=" ") ,",",formatC(uppsd, digits = digits, format = "f",flag=" "),")", sep = "")
+    cat("     ", formatC(pval, digits = digits, width=10,format = "f",flag="-"))
     cat("\n")
     
     # cat(' Random effects: \n')
@@ -83,6 +108,7 @@ print.JMcmprsk <- function(x, ...) {
     sd_sigmamatrix <- t(sd_sigmamatrix)
     
     # print sigmabii
+    cat("\nRandom effects:                 \n")
     for (i in 1:(dim(x$sigma_matrix)[1] - 1)) # for (j in 1:dim(x$sigma_matrix)[2])
     {
       sigma = paste0("sigma_b", i, i)
@@ -92,10 +118,10 @@ print.JMcmprsk <- function(x, ...) {
       lowersd = sigmaval - 1.96 * stdsigmaval
       zval = (sigmaval/stdsigmaval)
       pval = 2 * pnorm(-abs(zval))
-	  cat(" ",formatC(sigma,width=14,flag="-"), sprintf("% 1.4f", sigmaval))
-      cat("     ", sprintf("% 1.4f", stdsigmaval))
-      cat("     ", sprintf("(% 1.4f,% 1.4f)", lowersd, uppsd))
-      cat("    ", pval)
+	  cat(" ",formatC(sigma,width=14,flag="-"), formatC(sigmaval, digits = digits, format = "f",flag="-"))
+      cat("      ", 	  formatC(stdsigmaval, digits = digits,width=10, format = "f",flag="-"))
+      cat("  (", formatC(lowersd, digits = digits, format = "f",flag=" ") ,",",formatC(uppsd, digits = digits, format = "f",flag=" "),")", sep = "")
+      cat("     ", formatC(pval, digits = digits, width=10,format = "f",flag="-"))
       cat("\n")
     }
     # print sigmau
@@ -106,13 +132,13 @@ print.JMcmprsk <- function(x, ...) {
     lowersd = sigmaval - 1.96 * stdsigmaval
     zval = (sigmaval/stdsigmaval)
     pval = 2 * pnorm(-abs(zval))
-    cat(" ",formatC("sigma_u",width=14,flag="-"), sprintf("% 1.4f", sigmaval))
-    cat("     ", sprintf("% 1.4f", stdsigmaval))
-    cat("     ", sprintf("(% 1.4f,% 1.4f)", lowersd, uppsd))
-    cat("     ", pval)
+    cat(" ",formatC("sigma_u",width=14,flag="-"), formatC(sigmaval, digits = digits, format = "f",flag="-"))
+	cat("      ", formatC(stdsigmaval, digits = digits, width=10,format = "f",flag="-"))
+	cat("  (", formatC(lowersd, digits = digits, format = "f",flag=" ") ,",",formatC(uppsd, digits = digits, format = "f",flag=" "),")", sep = "")
+    cat("     ", formatC(pval, digits = digits, width=10,format = "f",flag="-"))
     cat("\n")
     
-    cat("Covariance:                 \n")
+    cat(" Covariance:                 \n")
     
     
     # print sigmabii
@@ -131,20 +157,41 @@ print.JMcmprsk <- function(x, ...) {
       lowersd = sigmaval - 1.96 * stdsigmaval
       zval = (sigmaval/stdsigmaval)
       pval = 2 * pnorm(-abs(zval))
-      cat(" ",formatC(sigma,width=14,flag="-"), sprintf("% 1.4f", sigmaval))
-      cat("     ", sprintf("% 1.4f", stdsigmaval))
-      cat("     ", sprintf("(% 1.4f,% 1.4f)", lowersd, uppsd))
-      cat("     ", pval)
+      cat(" ",formatC(sigma,width=14,flag="-"),formatC(sigmaval, digits = digits, format = "f",flag="-"))
+      cat("     ", formatC(stdsigmaval, digits = digits, format = "f",flag="-"))
+	  
+      cat("      (", formatC(lowersd, digits = digits, format = "f",flag=" ") ,",",formatC(uppsd, digits = digits, format = "f",flag=" "),")", sep = "")
+       cat("     ", formatC(pval, digits = digits, width=10,format = "f",flag="-"))
+	   
       cat("\n")
       
     }
     
   }
-  if (x$type == "jmo") {    
-    cat("                  Estimate   Std. Error       95% CI                Pr(>|Z|)    \n")
+  if (x$type == "jmo") {
+   
+    cat("Data Summary:\n")
+    cat("Number of observations:", x$SummaryInfo$Numobs, "\n")
+    cat("Number of groups:", x$k, "\n\n")
+    cat("Proportion of competing risks: \n")
+    for (i in 1:2) {
+      cat("Risk", i, ":", x$SummaryInfo$PropComp[i+1], "%\n")
+    }
+    cat("\nNumerical intergration:\n")
+    cat("Method: Standard Guass-Hermite quadrature\n")
+    cat("Number of quadrature points: ", x$point, "\n")
+    cat("\nModel Type: joint modeling of longitudinal ordinal and competing risks data", "\n\n")
+    cat("Model summary:\n")
+    cat("Longitudinal process: partial proportional odds model\n")
+    cat("Event process: cause-specific Cox proportional hazard model with unspecified baseline hazard\n\n")
+    cat("Loglikelihood: ", x$loglike, "\n\n")
+    cat("Longitudinal sub-model proportional odds: ", 
+        sprintf(format(paste(deparse(x$SummaryInfo$LongitudinalSubmodel, width.cutoff = 500), collapse=""))), "\n")
+    cat("Longitudinal sub-model non-proportional odds:", sprintf(x$SummaryInfo$LongNP), "\n")
+    cat("\n                  Estimate   Std. Error       95% CI            Pr(>|Z|)    \n")
     cat("Longitudinal:                \n")
     cat(" Fixed effects:                 \n")
-    
+    cat("  proportional odds:\n")
     for (i in 1:length(x$betas)) {
       #beta = paste0("beta", i)
       beta=names(x$betas)[i]
@@ -152,13 +199,18 @@ print.JMcmprsk <- function(x, ...) {
       lowersd = x$betas[i] - 1.96 * x$se_betas[i]
       zval = (x$betas[i]/x$se_betas[i])
       pval = 2 * pnorm(-abs(zval))
-      cat(" ",formatC(beta,width=14,flag="-"), sprintf("% 1.4f", x$betas[i]))	  
-      cat("     ", sprintf("% 1.4f", x$se_betas[i]))
-      cat("     ", sprintf("(% 1.4f,% 1.4f)", lowersd, uppsd))
-      cat("     ", pval)
-      cat("\n")
+     
+	  cat(" ",formatC(beta,width=14,flag="-"),  formatC(x$betas[i], digits = digits, width=10,format = "f",flag="-"))	  
+	 
+      cat("  ",  formatC(x$se_betas[i], digits = digits, width=10, format = "f",flag="-"))
+	  
+      cat("  (", formatC(lowersd, digits = digits, format = "f",flag=" ") ,",",formatC(uppsd, digits = digits, format = "f",flag=" "),")", sep = "")
+      cat("     ", formatC(pval, digits = digits, width=10,format = "f",flag="-"))
+      cat("\n")  
+	  
+	  
     }
-  
+    cat("  Non-proportional odds:\n")
       for (i in 1:dim(x$alphamatrix)[1]) for (j in 1:dim(x$alphamatrix)[2]) {
       #alpha = paste0("alpha", i+1, j)
       alpha=colnames(x$alphamatrix)[j]
@@ -170,32 +222,42 @@ print.JMcmprsk <- function(x, ...) {
       lowersd = alphaval - 1.96 * stdalphaval
       zval = (alphaval/stdalphaval)
       pval = 2 * pnorm(-abs(zval))
-      cat(" ",formatC(alpha,width=14,flag="-"),sprintf("% 1.4f", alphaval))
-      cat("     ", sprintf("% 1.4f", stdalphaval))
-      cat("     ", sprintf("(% 1.4f,% 1.4f)", lowersd, uppsd))
-      cat("     ", pval)
+
+	  cat(" ",formatC(alpha,width=14,flag="-"), formatC(alphaval, digits = digits, width=10,format = "f",flag="-"))	  
+	 
+      cat("  ",  formatC(stdalphaval, digits = digits, width=10, format = "f",flag="-"))
+	  
+      cat("  (", formatC(lowersd, digits = digits, format = "f",flag=" ") ,",",formatC(uppsd, digits = digits, format = "f",flag=" "),")", sep = "")
+      cat("     ", formatC(pval, digits = digits, width=10,format = "f",flag="-"))
       cat("\n")
+	  
+	  
+	  
+	  
     }
-  
-  
-  
-  
-  
-	
+    cat("  Logit-specific intercepts: \n")
 	for (i in 1:length(x$thetas)) {
       theta = paste0("theta", i)
       uppsd = x$thetas[i] + 1.96 * x$se_thetas[i]
       lowersd = x$thetas[i] - 1.96 * x$se_thetas[i]
       zval = (x$thetas[i]/x$se_thetas[i])
       pval = 2 * pnorm(-abs(zval))
-      cat(" ",formatC(theta,width=14,flag="-"), sprintf("% 1.4f", x$thetas[i]))
-      cat("     ", sprintf("% 1.4f", x$se_thetas[i]))
-      cat("     ", sprintf("(% 1.4f,% 1.4f)", lowersd, uppsd))
-      cat("     ", pval)
+     	  
+	  cat(" ",formatC(theta,width=14,flag="-"), formatC(x$thetas[i], digits = digits, width=10,format = "f",flag="-"))	  
+	 
+      cat("  ",  formatC(x$se_thetas[i], digits = digits, width=10, format = "f",flag="-"))
+	  
+      cat("  (", formatC(lowersd, digits = digits, format = "f",flag=" ") ,",",formatC(uppsd, digits = digits, format = "f",flag=" "),")", sep = "")
+      cat("     ", formatC(pval, digits = digits, width=10,format = "f",flag="-"))
       cat("\n")
+	  
+	  
+	  
     }
     
-    # cat(' Estimate Std. Error 95%CI Pr(>|Z|) \n')
+    cat("\nSurvival sub-model fixed effects: ", 
+        sprintf(format(paste(deparse(x$SummaryInfo$SurvivalSubmodel, width.cutoff = 500), collapse=""))), "\n")
+    cat("\n                  Estimate   Std. Error       95% CI            Pr(>|Z|)    \n")
     cat("Survival:                \n")
     cat(" Fixed effects:                 \n")
     for (i in 1:dim(x$gamma_matrix)[1]) for (j in 1:dim(x$gamma_matrix)[2]) {
@@ -208,22 +270,27 @@ print.JMcmprsk <- function(x, ...) {
       lowersd = gammaval - 1.96 * stdgammaval
       zval = (gammaval/stdgammaval)
       pval = 2 * pnorm(-abs(zval))
-      cat(" ",formatC(gamma,width=14,flag="-"), sprintf("% 1.4f", gammaval))
-      cat("     ", sprintf("% 1.4f", stdgammaval))
-      cat("     ", sprintf("(% 1.4f,% 1.4f)", lowersd, uppsd))
-      cat("     ", pval)
+      
+      cat(" ",formatC(gamma,width=14,flag="-"),formatC(gammaval, digits = digits, width=10, format = "f",flag="-"))
+	  
+      cat("  ",  formatC(stdgammaval, digits = digits, width=10, format = "f",flag="-"))	  
+      cat("  (", formatC(lowersd, digits = digits, format = "f",flag=" ") ,",",formatC(uppsd, digits = digits, format = "f",flag=" "),")", sep = "")
+      cat("     ", formatC(pval, digits = digits, width=10,format = "f",flag="-"))
       cat("\n")
+	  
+	  
     }
-    cat("Random effects:                 \n")
-    cat(" ",formatC("v2",width=14,flag="-"), sprintf("% 1.4f", x$v_estimate))
-    cat("      ", sprintf("% 1.4f", x$se_v_estimate))
+    cat("\nAssociation prameter:                 \n")
     
+	cat(" ",formatC("v2",width=14,flag="-"), formatC(x$v_estimate, digits = digits, width=10, format = "f",flag="-"))
+	cat("  ",  formatC(x$se_v_estimate, digits = digits, width=10, format = "f",flag="-"))
+	
     uppsd = x$v_estimate + 1.96 * x$se_v_estimate
     lowersd = x$v_estimate - 1.96 * x$se_v_estimate
     zval = (x$v_estimate/x$se_v_estimate)
     pval = 2 * pnorm(-abs(zval))
-    cat("    ", sprintf("(% 1.4f,% 1.4f)", lowersd, uppsd))
-    cat("     ", pval)
+    cat("  (", formatC(lowersd, digits = digits, format = "f",flag=" ") ,",",formatC(uppsd, digits = digits, format = "f",flag=" "),")", sep = "")
+    cat("     ", formatC(pval, digits = digits, width=10,format = "f",flag="-"))
     cat("\n")
     
     # cat(' Random effects: \n')
@@ -232,7 +299,7 @@ print.JMcmprsk <- function(x, ...) {
     sd_sigmamatrix = matrix(0, dim(x$sigma_matrix)[1], dim(x$sigma_matrix)[1])
     sd_sigmamatrix[lower.tri(sd_sigmamatrix, diag = TRUE)] <- x$se_sigma
     sd_sigmamatrix <- t(sd_sigmamatrix)
-    
+    cat("\nRandom effects:                 \n")
     # print sigmabii
     for (i in 1:(dim(x$sigma_matrix)[1] - 1)) # for (j in 1:dim(x$sigma_matrix)[2])
     {
@@ -243,11 +310,13 @@ print.JMcmprsk <- function(x, ...) {
       lowersd = sigmaval - 1.96 * stdsigmaval
       zval = (sigmaval/stdsigmaval)
       pval = 2 * pnorm(-abs(zval))
-      cat(" ",formatC(sigma,width=14,flag="-"), sprintf("% 1.4f", sigmaval))
-      cat("      ", sprintf("% 1.4f", stdsigmaval))
-      cat("    ", sprintf("(% 1.4f,% 1.4f)", lowersd, uppsd))
-      cat("     ", pval)
+		  
+	  cat(" ",formatC(sigma,width=14,flag="-"), formatC(sigmaval, digits = digits, format = "f",flag="-"))
+      cat("      ", 	  formatC(stdsigmaval, digits = digits,width=10, format = "f",flag="-"))
+      cat("  (", formatC(lowersd, digits = digits, format = "f",flag=" ") ,",",formatC(uppsd, digits = digits, format = "f",flag=" "),")", sep = "")
+      cat("     ", formatC(pval, digits = digits, width=10,format = "f",flag="-"))
       cat("\n")
+	  
     }
     # print sigmau
     si = dim(x$sigma_matrix)[1]
@@ -257,13 +326,16 @@ print.JMcmprsk <- function(x, ...) {
     lowersd = sigmaval - 1.96 * stdsigmaval
     zval = (sigmaval/stdsigmaval)
     pval = 2 * pnorm(-abs(zval))
-    cat(" ",formatC("sigma_u",width=14,flag="-"), sprintf("% 1.4f", sigmaval))
-    cat("      ", sprintf("% 1.4f", stdsigmaval))
-    cat("    ", sprintf("(% 1.4f,% 1.4f)", lowersd, uppsd))
-    cat("     ", pval)
+     
+	cat(" ",formatC("sigma_u",width=14,flag="-"), formatC(sigmaval, digits = digits, format = "f",flag="-"))
+	cat("      ", formatC(stdsigmaval, digits = digits, width=10,format = "f",flag="-"))
+	cat("  (", formatC(lowersd, digits = digits, format = "f",flag=" ") ,",",formatC(uppsd, digits = digits, format = "f",flag=" "),")", sep = "")
+    cat("     ", formatC(pval, digits = digits, width=10,format = "f",flag="-"))
     cat("\n")
-    
-    cat("Covariance:                 \n")
+	
+	
+	
+    cat(" Covariance:                 \n")
     
     
     # print sigmabii
@@ -282,12 +354,14 @@ print.JMcmprsk <- function(x, ...) {
       lowersd = sigmaval - 1.96 * stdsigmaval
       zval = (sigmaval/stdsigmaval)
       pval = 2 * pnorm(-abs(zval))
-      cat(" ", formatC(sigma,width=14,flag="-"), sprintf("% 1.4f", sigmaval))
-      cat("      ", sprintf("% 1.4f", stdsigmaval))
-      cat("    ", sprintf("(% 1.4f,% 1.4f)", lowersd, uppsd))
-      cat("     ", pval)
-      cat("\n")
       
+	  cat(" ",formatC(sigma,width=14,flag="-"),formatC(sigmaval, digits = digits, format = "f",flag="-"))
+      cat("     ", formatC(stdsigmaval, digits = digits, format = "f",flag="-"))
+	  
+      cat("      (", formatC(lowersd, digits = digits, format = "f",flag=" ") ,",",formatC(uppsd, digits = digits, format = "f",flag=" "),")", sep = "")
+       cat("     ", formatC(pval, digits = digits, width=10,format = "f",flag="-"))
+	   
+      cat("\n")
     }
     
     

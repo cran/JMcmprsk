@@ -4,10 +4,12 @@
 \alias{print.JMcmprsk}
 \title{Print JMcmprsk}
 \usage{
-\method{print}{JMcmprsk}(x, ...)
+\method{print}{JMcmprsk}(x, digits = 4, ...)
 }
 \arguments{
 \item{x}{Object of class 'JMcmprsk'.}
+
+\item{digits}{The desired number of digits after the decimal point. Default is 4.}
 
 \item{...}{Further arguments passed to or from other methods.}
 }

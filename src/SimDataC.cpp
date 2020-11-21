@@ -81,7 +81,7 @@ static double Min(const double t1, const double t2)  /******** ####### Min funct
 //' SimDataC(k_val, p1_val, p1a_val, p2_val, g_val,truebeta, 
 //'          truegamma, randeffect, yfn,  cfn,  mfn)
 //' \donttest{
-//' jmc(p=4,yfn,cfn,mfn,point=6)
+//' jmc_0(p=4,yfn,cfn,mfn,point=6)
 //'}
 //' @references
 //' \itemize{

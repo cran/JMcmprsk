@@ -69,7 +69,7 @@ truebeta=c(10,-1,1.5,0.6);truegamma=c(0.8,-1,0.5,-1); randeffect=c(5,0.5,0.5,0.5
 SimDataC(k_val, p1_val, p1a_val, p2_val, g_val,truebeta, 
          truegamma, randeffect, yfn,  cfn,  mfn)
 \donttest{
-jmc(p=4,yfn,cfn,mfn,point=6)
+jmc_0(p=4,yfn,cfn,mfn,point=6)
 }
 }
 \references{

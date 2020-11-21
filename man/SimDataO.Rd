@@ -72,7 +72,7 @@ truebeta=c(-1,1.5,0.8);truetheta=c(-0.5,1);truegamma=c(0.8,-1,0.5,-1); randeffec
 SimDataO(k_val, p1_val, p1a_val, p2_val, g_val,
       truebeta, truetheta, truegamma, randeffect, yfn,  cfn,  mfn)
 \donttest{
-jmo(p=3,s=1, yfn,cfn,mfn,point=10,do.trace = TRUE)
+jmo_0(p=3,s=1, yfn,cfn,mfn,point=10,do.trace = TRUE)
 }
 }
 \references{

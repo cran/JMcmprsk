@@ -92,7 +92,7 @@ void MulM(const gsl_matrix *XX, const gsl_vector *X, gsl_vector *beta)
 //' SimDataO(k_val, p1_val, p1a_val, p2_val, g_val,
 //'       truebeta, truetheta, truegamma, randeffect, yfn,  cfn,  mfn)
 //' \donttest{
-//' jmo(p=3,s=1, yfn,cfn,mfn,point=10,do.trace = TRUE)
+//' jmo_0(p=3,s=1, yfn,cfn,mfn,point=10,do.trace = TRUE)
 //'}
 //' @references
 //' \itemize{
@@ -219,8 +219,8 @@ Rcpp::List   SimDataO(SEXP k_val,SEXP p1_val,SEXP p1a_val,SEXP p2_val, SEXP g_va
     for(i=0;i<p1a+1;i++) gsl_matrix_set(V,i,i,sqrt(gsl_vector_get(S,i)));
 
 
-    double lamda01=0.15, lamda02=0.25;      
-                     
+    //double lamda01=0.15, lamda02=0.02;      
+    double lamda01=0.15, lamda02=0.25;                       
 
 
     const gsl_rng_type * T;
@@ -254,7 +254,7 @@ Rcpp::List   SimDataO(SEXP k_val,SEXP p1_val,SEXP p1a_val,SEXP p2_val, SEXP g_va
         x1=gsl_ran_gaussian(r,sqrt(sigmax))+2;
         x2=gsl_ran_bernoulli(r,prob);
         censor=gsl_ran_exponential(r,10);
-
+        //censor=gsl_ran_exponential(r,40);
         gsl_matrix_set(C,j,2,x1);
         gsl_matrix_set(C,j,3,x2);
          
