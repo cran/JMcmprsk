@@ -43,7 +43,7 @@ Object of class \code{JMcmprsk} with elements
       \code{se_betas} \tab The standard error estimate of \eqn{\beta}. \cr
       \code{alphamatrix} \tab The point  estimates of \eqn{\alpha}. \cr
       \code{se_alphas} \tab The standard error estimate of \eqn{\alpha}. \cr
-      \code{theta} \tab The point  estimates of \eqn{\theta}. \cr 
+      \code{theta} \tab The point  estimates of \eqn{\theta}. \cr
       \code{se_theta} \tab The standard error estimate of \eqn{\theta}. \cr
       \code{gamma_matrix} \tab  The point  estimate of \eqn{\gamma}. \cr
       \code{se_gamma_matrix}   \tab  The standard error estimate of \eqn{\gamma}. \cr

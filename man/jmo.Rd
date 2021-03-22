@@ -24,7 +24,7 @@ jmo(
 \item{long_data}{Data matrix for longitudinal in long format. The time variable should be labeled 'time'.}
 
 \item{surv_data}{Data matrix for competing risks data. Each subject has one row of observation (as opposed to the long_data).
-First and second column should be the observed event time and censoring indicator, respectively. 
+First and second column should be the observed event time and censoring indicator, respectively.
 The coding for the censoring indicator is as follows: 0 - censored events, 1 - risk 1, 2 - risk 2. Two competing risks are assumed.}
 
 \item{out}{Column name for outcome variable in long_data.}
@@ -77,17 +77,18 @@ Reconstruct data into a regular longitudinal format as a refined dataset and do 
   cread <- ninds[, c(1, 15, 16, 6, 10:14)]
   cread <- unique(cread)
   \donttest{
+  # Please note only those variables that will appear in the model can be included
   res1 <- jmo(yread, cread, out = "Y",
               FE = c("group", "time3", "time6", "time12", "mrkprior",
                      "smlves", "lvORcs", "smlves.group", "lvORcs.group"),
-              cate = NULL,RE = "intercept", NP = c("smlves", "lvORcs"), 
-              ID = "ID",intcpt = 1, quad.points = 6, 
+              cate = NULL,RE = "intercept", NP = c("smlves", "lvORcs"),
+              ID = "ID",intcpt = 1, quad.points = 6,
               max.iter = 1000, quiet = FALSE, do.trace = FALSE)
    res1
   }
- 
+
   \dontrun{
-  #Create two categorical variables and add them into yread              
+  #Create two categorical variables and add them into yread
   ID <- cread$ID
   set.seed(100)
   sex <- sample(c("Female", "Male"), nrow(cread), replace = T)
@@ -96,7 +97,7 @@ Reconstruct data into a regular longitudinal format as a refined dataset and do 
   if (require(dplyr)) {
     yread <- dplyr::left_join(yread, cate_var, by = "ID")
       }
-  
+
   res2 <- jmo(yread, cread, out = "Y",
               FE = c("group", "time3", "time6", "time12", "mrkprior",
                      "smlves", "lvORcs", "smlves.group", "lvORcs.group"), cate = c("race", "sex"),
@@ -104,8 +105,8 @@ Reconstruct data into a regular longitudinal format as a refined dataset and do 
               quad.points = 20, max.iter = 10000, quiet = FALSE, do.trace = FALSE)
   res2
   }
-  
-  
+
+
 }
 \seealso{
 \code{\link{jmo_0}}

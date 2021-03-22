@@ -23,7 +23,7 @@ jmc(
 \item{long_data}{Data matrix for longitudinal in long form. The time variable should be labeled 'time'.}
 
 \item{surv_data}{Data matrix for competing risks data. Each subject has one row of observation (as opposed to the long_data).
-First and second column should be the observed event time and censoring indicator, respectively. 
+First and second column should be the observed event time and censoring indicator, respectively.
 The coding for the censoring indicator is as follows: 0 - censored events, 1 - risk 1, 2 - risk 2. Two competing risks are assumed.}
 
 \item{out}{Column name for outcome variable in long_data.}
@@ -74,10 +74,11 @@ data(lung)
 yread <- lung[, c(1,2:11)]
 cread <- unique(lung[, c(1, 12, 13, 6:10)])
 \donttest{
-res <- jmc(long_data = yread, surv_data = cread, out = "FVC", 
-           FE = c("time", "FVC0", "FIB0", "CYC", "FVC0.CYC", 
-                  "FIB0.CYC", "time.CYC"), 
-           RE = "linear", ID = "ID",cate = NULL, intcpt = 0, 
+#Please note only those variables that will appear in the model can be included
+res <- jmc(long_data = yread, surv_data = cread, out = "FVC",
+           FE = c("time", "FVC0", "FIB0", "CYC", "FVC0.CYC",
+                  "FIB0.CYC", "time.CYC"),
+           RE = "linear", ID = "ID",cate = NULL, intcpt = 0,
            quad.points = 8, quiet = FALSE)
 }
 
@@ -88,7 +89,7 @@ race <- sample(c("White", "Black", "Asian", "Hispanic"),
 ID <- cread$ID
 cate_var <- data.frame(ID, sex, race)
 if (require(dplyr)) {
-  yread <- dplyr::left_join(yread, cate_var, by = "ID") 
+  yread <- dplyr::left_join(yread, cate_var, by = "ID")
 }
 \donttest{
 # run jmc function again for yread file with two added categorical variables
@@ -106,15 +107,15 @@ res2
  linearTest(res2, coeff="beta")
  ## Linear hypothesis of testing beta1=beta2
  ## create a linear contrast for beta1=beta2 (intercept not included in Lb)
- Lb <- matrix(c(1, -1, 0, 0, 0, 0, 0), ncol = length(beta)-1, nrow = 1)
+ Lb <- matrix(c(1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0), ncol = length(beta)-1, nrow = 1)
  linearTest(res2, coeff="beta", Lb = Lb)
  # Extract the parameter estimates of survival sub-model fixed effects
  gamma <- coef(res2, coeff = "gamma")
  gamma
  ## Linear hypothesis of testing all coefficients of gamma's equal 0
  linearTest(res2, coeff="gamma")
- ## Linear hypothesis of testing gamma11=gamma21 
- ##  (the coefficients of first covariate from 
+ ## Linear hypothesis of testing gamma11=gamma21
+ ##  (the coefficients of first covariate from
  ##    both risk functions are equal)
  Lg <- matrix(c(1, 0, 0, 0, 0, -1, 0, 0, 0, 0), ncol = length(gamma), nrow = 1)
  linearTest(res2, coeff="gamma", Lg = Lg)

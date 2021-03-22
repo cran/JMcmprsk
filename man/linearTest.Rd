@@ -22,19 +22,19 @@ linearTest(
 
 \item{coeff}{Types of coefficients selected for Wald. Note "alpha" is only avaiable to jmo type JMcmprsk object.}
 
-\item{La}{Linear contrast of the fixed effects of non-proportional odds covariates * (# of levels of the outcome - 2) in the longitudinal part. 
+\item{La}{Linear contrast of the fixed effects of non-proportional odds covariates * (# of levels of the outcome - 2) in the longitudinal part.
 Default is "identity", i.e., all the fixed effects equal to zero. Otherwise, La must be a matrix.}
 
-\item{Lb}{Linear contrast of the fixed effects of proportional odds covariates in the longitudinal part. 
+\item{Lb}{Linear contrast of the fixed effects of proportional odds covariates in the longitudinal part.
 Default is "identity", i.e., all the fixed effects equal to zero. Otherwise, Lb must be a matrix.}
 
-\item{Lg}{Linear contrast of the fixed effects of covariates * # of competing risks in the survival part. 
+\item{Lg}{Linear contrast of the fixed effects of covariates * # of competing risks in the survival part.
 Default is "identity", i.e., all the fixed effects equal to zero. Otherwise, Lg must be a matrix.}
 
-\item{Ca}{The hypothesized value of linear combination of the fixed effects of non-proportional odds covariates 
+\item{Ca}{The hypothesized value of linear combination of the fixed effects of non-proportional odds covariates
 * (# of levels of the outcome - 2) in the longitudinal part. Default is 0. Otherwise, Ca must be a number / vector.}
 
-\item{Cb}{The hypothesized value of linear combination of the fixed effects of proportional odds covariates 
+\item{Cb}{The hypothesized value of linear combination of the fixed effects of proportional odds covariates
 in the longitudinal part. Default is 0. Otherwise, Cb must be a number / vector.}
 
 \item{Cg}{The hypothesized value of linear combination of the fixed effects of covariates * # of competing risks in the survival part.
@@ -56,13 +56,13 @@ Return a Wald test statistic and the p value
 Joint modelling for longitutal and censored data with competing risks
 }
 \details{
-Wald test statistic is used for hypothesis testing on multiple parameters: 
+Wald test statistic is used for hypothesis testing on multiple parameters:
 
   \eqn{H_0: L\theta = C} vs: \eqn{H_1: L\theta \neq C}
 
   The test statistic is:
-  
+
   \eqn{(L\hat{\theta} - C)'(L\hat{V_{\theta}}L)^{-1}(L\hat{\theta} - C) \sim \chi_q^2,}
-   
+
   where \eqn{\hat{V_{\theta}}} is the estimate of covariance of the parameter \eqn{\theta} and q is the rank of the linear contrast \eqn{L}.
 }

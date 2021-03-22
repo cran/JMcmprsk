@@ -1,5 +1,5 @@
 ##' Joint modeling of longitudinal continuous data and competing risks
-##' @title Joint Modelling for Continuous outcomes 
+##' @title Joint Modelling for Continuous outcomes
 ##' @param p  The dimension of fixed effects (include intercept) in yfile.
 ##' @param yfile Y matrix for longitudinal measurements in long format. For example, for a subject with n measurements, there should be n rows for this subject. The # of rows in y matrix is the total number of measurements for all subjects in the study. The columns in Y should start with the longitudinal outcome (column 1), the covariates for the random effects, and then the covariates for the fixed effects.
 ##' @param cfile C matrix for competing risks failure time data. Each subject has one data entry, so the number of rows equals to the number of subjects. The survival / censoring time is included in the first column, and the failure type coded as 0 (censored events), 1 (risk 1), or 2 (risk 2) is given in the second column. Two competing risks are assumed. The covariates are included in the third column and on.
@@ -23,7 +23,7 @@
 ##'       \code{se_sigma}     \tab The standard error estimate of \eqn{\Sigma}.The standard errors are given in this order: main diagonal, the second main diagonal, and so on. \cr
 ##'       \code{loglike}     \tab Log Likelihood.\cr
 ##'   }
-##'   
+##'
 ##' @examples
 ##' # A toy example on a dataset called from file paths
 ##' require(JMcmprsk)
@@ -54,167 +54,162 @@
 ##' }
 ##' @seealso \code{\link{jmo}}
 ##' @export
-jmc_0<- function (p,yfile,cfile,mfile,point=20,maxiterations=100000,do.trace=FALSE,type_file=TRUE)
-{
-  if (do.trace) { 
-    trace=1;
-  }else{
-    trace=0;
+jmc_0 <- function(p, yfile, cfile, mfile, point = 20, maxiterations = 100000, do.trace = FALSE, type_file = TRUE) {
+  if (do.trace) {
+    trace <- 1
+  } else {
+    trace <- 0
   }
-  
-  
-  #Gaussian-Hermite quadrature nodes and weights
-  #The dimension of xs/ws is half of the point value since they are symmetric
-  
-  gq_vals <- statmod::gauss.quad(n = point, kind = "hermite")
-  
-  xs <- gq_vals$nodes[(point / 2 + 1) : point]
-  
-  ws <- gq_vals$weights[(point / 2 + 1) : point]
-  
-  if (type_file){
-  # store header names for future useage
-  ydata=read.table(yfile,header = TRUE)
-  ynames=colnames(ydata)
-  yfile=tempfile(pattern = "", fileext = ".txt")
-  writenh(ydata,yfile)
-  
-  cdata=read.table(cfile,header = TRUE)
-  cnames=colnames(cdata)
-  cfile=tempfile(pattern = "", fileext = ".txt")
-  writenh(cdata,cfile)
-  
-  
-  ydim=dim(ydata)
-  # number of observations in study is equals to the #of rows in Y matrix
-  n1=ydim[1];
-  # dim of fixed effects plus dim of random effects should be 
-  # total the column of y -the survival time column 1
-  p1a=ydim[2]-1-p;
-  
-  if((p<1)|(p1a<1)){
-    stop("Possibe wrong dimension of fixed effects in Y!")
-  }
-  
-  if (p1a > 3) {
-    stop("Maximum of 3 random effects are allowed. Please reconsider the random effect covariates you need!")
-  }
-  
-  cdim=dim(cdata);
-  
-  ##Check the completeness of data
-  if (sum(complete.cases(ydata)) != ydim[1]) {
-    stop("Missing values detected! Please make sure your longitudinal data is complete!")
-  }
-  
-  if (sum(complete.cases(cdata)) != cdim[1]) {
-    stop("Missing values detected! Please make sure your survival data is complete!")
-  }
- 
-  # number of subjects in study is equals to the #of rows in C matrix
-  k=cdim[1];
-  #
-  p2=cdim[2]-2;
 
-  maxl=max(read.table(mfile));
-  myresult=jmc_main(k,n1, p,p2, maxl,p1a, maxiterations, point,xs,ws, yfile,cfile,mfile,trace)
-  
-  PropComp <- round(table(cdata[, 2])/k * 100, 2)
-  
-  }else{
-    ynames=colnames(yfile)
-    yfilenew=tempfile(pattern = "", fileext = ".txt")
-    writenh(yfile,yfilenew)
-    
-    cnames=colnames(cfile)
-    cfilenew=tempfile(pattern = "", fileext = ".txt")
-    writenh(cfile,cfilenew)
-    
-    mfilenew=tempfile(pattern = "", fileext = ".txt")
-    writenh(mfile,mfilenew)
-    
-    ydim=dim(yfile)
+
+  # Gaussian-Hermite quadrature nodes and weights
+  # The dimension of xs/ws is half of the point value since they are symmetric
+
+  gq_vals <- statmod::gauss.quad(n = point, kind = "hermite")
+
+  xs <- gq_vals$nodes[(point / 2 + 1):point]
+
+  ws <- gq_vals$weights[(point / 2 + 1):point]
+
+  if (type_file) {
+    # store header names for future useage
+    ydata <- read.table(yfile, header = TRUE)
+    ynames <- colnames(ydata)
+    yfile <- tempfile(pattern = "", fileext = ".txt")
+    writenh(ydata, yfile)
+
+    cdata <- read.table(cfile, header = TRUE)
+    cnames <- colnames(cdata)
+    cfile <- tempfile(pattern = "", fileext = ".txt")
+    writenh(cdata, cfile)
+
+
+    ydim <- dim(ydata)
     # number of observations in study is equals to the #of rows in Y matrix
-    n1=ydim[1];
-    # dim of fixed effects plus dim of random effects should be 
+    n1 <- ydim[1]
+    # dim of fixed effects plus dim of random effects should be
     # total the column of y -the survival time column 1
-    p1a=ydim[2]-1-p;
-    
-    if((p<1)|(p1a<1)){
+    p1a <- ydim[2] - 1 - p
+
+    if ((p < 1) | (p1a < 1)) {
       stop("Possibe wrong dimension of fixed effects in Y!")
     }
-    
+
     if (p1a > 3) {
       stop("Maximum of 3 random effects are allowed. Please reconsider the random effect covariates you need!")
     }
-    
-    cdim=dim(cfile);
-    
-    ##Check the completeness of data
+
+    cdim <- dim(cdata)
+
+    ## Check the completeness of data
+    if (sum(complete.cases(ydata)) != ydim[1]) {
+      stop("Missing values detected! Please make sure your longitudinal data is complete!")
+    }
+
+    if (sum(complete.cases(cdata)) != cdim[1]) {
+      stop("Missing values detected! Please make sure your survival data is complete!")
+    }
+
+    # number of subjects in study is equals to the #of rows in C matrix
+    k <- cdim[1]
+    #
+    p2 <- cdim[2] - 2
+
+    maxl <- max(read.table(mfile))
+    myresult <- jmc_main(k, n1, p, p2, maxl, p1a, maxiterations, point, xs, ws, yfile, cfile, mfile, trace)
+
+    PropComp <- round(table(cdata[, 2]) / k * 100, 2)
+  } else {
+    ynames <- colnames(yfile)
+    yfilenew <- tempfile(pattern = "", fileext = ".txt")
+    writenh(yfile, yfilenew)
+
+    cnames <- colnames(cfile)
+    cfilenew <- tempfile(pattern = "", fileext = ".txt")
+    writenh(cfile, cfilenew)
+
+    mfilenew <- tempfile(pattern = "", fileext = ".txt")
+    writenh(mfile, mfilenew)
+
+    ydim <- dim(yfile)
+    # number of observations in study is equals to the #of rows in Y matrix
+    n1 <- ydim[1]
+    # dim of fixed effects plus dim of random effects should be
+    # total the column of y -the survival time column 1
+    p1a <- ydim[2] - 1 - p
+
+    if ((p < 1) | (p1a < 1)) {
+      stop("Possibe wrong dimension of fixed effects in Y!")
+    }
+
+    if (p1a > 3) {
+      stop("Maximum of 3 random effects are allowed. Please reconsider the random effect covariates you need!")
+    }
+
+    cdim <- dim(cfile)
+
+    ## Check the completeness of data
     if (sum(complete.cases(yfile)) != ydim[1]) {
       stop("Missing values detected! Please make sure your longitudinal data is complete!")
     }
-    
+
     if (sum(complete.cases(cfile)) != cdim[1]) {
       stop("Missing values detected! Please make sure your survival data is complete!")
     }
-    
+
     # number of subjects in study is equals to the #of rows in C matrix
-    k=cdim[1];
+    k <- cdim[1]
     #
-    p2=cdim[2]-2;
-    
-    maxl=max(mfile);
-  
-    
-  myresult=jmc_main(k,n1, p,p2, maxl,p1a, maxiterations, point,xs,ws, yfilenew,cfilenew,mfilenew,trace)  
-    
-    PropComp <- round(table(cfile[, 2])/k * 100, 2)
-    
+    p2 <- cdim[2] - 2
+
+    maxl <- max(mfile)
+
+
+    myresult <- jmc_main(k, n1, p, p2, maxl, p1a, maxiterations, point, xs, ws, yfilenew, cfilenew, mfilenew, trace)
+
+    PropComp <- round(table(cfile[, 2]) / k * 100, 2)
   }
-  
-  
-
- 
 
 
-  myresult$type="jmc";
 
-  #names
-  names(myresult$betas)=ynames[(ydim[2]-p+1):ydim[2]]
 
-  colnames(myresult$gamma_matrix)=cnames[3:(p2+3-1)]
 
-  myresult$k=k
-  
-  ##create longitudinal submodel formula
-  #ynames <- colnames(ydata)
+
+  myresult$type <- "jmc"
+
+  # names
+  names(myresult$betas) <- ynames[(ydim[2] - p + 1):ydim[2]]
+
+  colnames(myresult$gamma_matrix) <- cnames[3:(p2 + 3 - 1)]
+
+  myresult$k <- k
+
+  ## create longitudinal submodel formula
+  # ynames <- colnames(ydata)
   LongOut <- ynames[1]
-  LongX <- paste0(ynames[(3+p1a):length(ynames)], collapse = "+")
+  LongX <- paste0(ynames[(3 + p1a):length(ynames)], collapse = "+")
   FunCall_long <- as.formula(paste(LongOut, LongX, sep = "~"))
-  
-  ##create survival submodel formula
-  #cnames <- colnames(cdata)
+
+  ## create survival submodel formula
+  # cnames <- colnames(cdata)
   SurvOut <- paste0("Surv(", cnames[1], ",", cnames[2], ")")
   SurvX <- paste0(cnames[-(1:2)], collapse = "+")
   FunCall_survival <- as.formula(paste(SurvOut, SurvX, sep = "~"))
-  
-  
+
+
   DataPath <- NULL
   SummaryInfo <- list(k, n1, PropComp, FunCall_long, FunCall_survival, DataPath)
-  names(SummaryInfo) <- c("NumSub", "Numobs", "PropComp", 
-                          "LongitudinalSubmodel", "SurvivalSubmodel", "DataPath")
-  
+  names(SummaryInfo) <- c(
+    "NumSub", "Numobs", "PropComp",
+    "LongitudinalSubmodel", "SurvivalSubmodel", "DataPath"
+  )
+
   myresult$SummaryInfo <- SummaryInfo
   myresult$point <- point
   class(myresult) <- "JMcmprsk"
-  
-  mycall=match.call()
-  myresult$call=mycall
-  
-  return (myresult)
+
+  mycall <- match.call()
+  myresult$call <- mycall
+
+  return(myresult)
 }
-
-
-
-
